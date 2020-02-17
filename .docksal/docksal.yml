@@ -1,1 +1,7 @@
 version: "2.1"
+services:
+    # Solr
+    solr:
+      extends:
+        file: ${HOME}/.docksal/stacks/services.yml
+        service: solr
