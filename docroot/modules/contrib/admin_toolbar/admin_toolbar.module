@@ -130,3 +130,11 @@ function toolbar_tools_menu_navigation_links(array $tree) {
   }
   return $tree;
 }
+
+function admin_toolbar_block_view_block_content_alter(array &$build,$block) {
+  $build['#pre_render'][] = '_update_base_block_content';
+}
+
+function _update_base_block_content(array $build){
+	
+}
