@@ -1,0 +1,25 @@
+uuid: a5eb0914-dded-41f0-9b5f-68a79c1a8356
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.body
+    - node.type.migrate_example_wine
+  module:
+    - text
+_core:
+  default_config_hash: vq3DCSKc6pTaZwP7vJB6S75vq2zwxDXxHAG2a82526U
+id: node.migrate_example_wine.body
+field_name: body
+entity_type: node
+bundle: migrate_example_wine
+label: Body
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  display_summary: true
+  required_summary: false
+field_type: text_with_summary

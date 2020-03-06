@@ -4,10 +4,8 @@ status: true
 dependencies:
   config:
     - field.field.node.page.body
-    - field.field.node.page.field_interactive_content
     - node.type.page
   module:
-    - h5peditor
     - path
     - text
 _core:
@@ -33,12 +31,13 @@ content:
     region: content
     settings: {  }
     third_party_settings: {  }
-  field_interactive_content:
-    weight: 121
-    settings: {  }
-    third_party_settings: {  }
-    type: h5p_editor
+  langcode:
+    type: language_select
+    weight: 2
     region: content
+    settings:
+      include_locked: true
+    third_party_settings: {  }
   path:
     type: path
     weight: 30

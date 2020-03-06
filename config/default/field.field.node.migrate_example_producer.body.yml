@@ -1,0 +1,25 @@
+uuid: 91aef9cd-506c-473c-8890-56685e12fb59
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.body
+    - node.type.migrate_example_producer
+  module:
+    - text
+_core:
+  default_config_hash: JgX7dNn2ZZjdq1XeVaoasaaWggHCSTw1B5UEy_B-_XU
+id: node.migrate_example_producer.body
+field_name: body
+entity_type: node
+bundle: migrate_example_producer
+label: Body
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  display_summary: true
+  required_summary: false
+field_type: text_with_summary

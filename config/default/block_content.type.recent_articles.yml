@@ -1,0 +1,8 @@
+uuid: ca4fe036-bdf2-4b4d-ae2c-3de6862d6cec
+langcode: en
+status: true
+dependencies: {  }
+id: recent_articles
+label: 'Recent Articles'
+revision: 0
+description: 'A block to display recent articles'

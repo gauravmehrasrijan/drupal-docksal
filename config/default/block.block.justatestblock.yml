@@ -1,0 +1,33 @@
+uuid: a4e9b11b-42c3-44e5-9e5b-336cf484829c
+langcode: en
+status: true
+dependencies:
+  content:
+    - 'block_content:recent_articles:4cc56020-d42b-48af-a24c-2de4940624e7'
+  module:
+    - block_content
+    - node
+  theme:
+    - seven
+id: justatestblock
+theme: seven
+region: content
+weight: 0
+provider: null
+plugin: 'block_content:4cc56020-d42b-48af-a24c-2de4940624e7'
+settings:
+  id: 'block_content:4cc56020-d42b-48af-a24c-2de4940624e7'
+  label: 'Just a test block'
+  provider: block_content
+  label_display: visible
+  status: true
+  info: ''
+  view_mode: full
+visibility:
+  node_type:
+    id: node_type
+    bundles:
+      article: article
+    negate: false
+    context_mapping:
+      node: '@node.node_route_context:node'

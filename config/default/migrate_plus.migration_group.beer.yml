@@ -1,0 +1,17 @@
+uuid: aac671c0-9bb1-493e-8f69-2de3e93d0915
+langcode: en
+status: true
+dependencies:
+  enforced:
+    module:
+      - migrate_example
+_core:
+  default_config_hash: 1zT-c3Sas5c7Fl4htCi1fekBY8oU2P5PuL7E084qf5k
+id: beer
+label: 'Beer Imports'
+description: 'A few simple beer-related imports, to demonstrate how to implement migrations.'
+source_type: 'Custom tables'
+module: null
+shared_configuration:
+  source:
+    key: default

@@ -1,0 +1,14 @@
+version_checking: true
+term_click_destinations: {  }
+override_connections: {  }
+notifications:
+  enabled: true
+  interval: '86400'
+  roles: {  }
+  mail_to: ''
+  actions:
+    semantic_connector_poolparty_license_check: true
+global_notifications: {  }
+global_notification_last_check: 1583406056
+_core:
+  default_config_hash: vS2iwj5lrTK3VVi_txKaIMDsibcZ1vl7oqjifCUthNU

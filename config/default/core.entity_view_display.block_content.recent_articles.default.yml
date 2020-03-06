@@ -1,0 +1,35 @@
+uuid: 850e7bd4-9722-43fb-a2bf-bd2273468b67
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.recent_articles
+    - field.field.block_content.recent_articles.body
+    - field.field.block_content.recent_articles.field_image
+  module:
+    - image
+    - text
+id: block_content.recent_articles.default
+targetEntityType: block_content
+bundle: recent_articles
+mode: default
+content:
+  body:
+    label: hidden
+    type: text_default
+    weight: 0
+    settings: {  }
+    third_party_settings: {  }
+    region: content
+  field_image:
+    weight: 1
+    label: above
+    settings:
+      image_style: ''
+      image_link: ''
+    third_party_settings: {  }
+    type: image
+    region: content
+hidden:
+  langcode: true
+  search_api_excerpt: true

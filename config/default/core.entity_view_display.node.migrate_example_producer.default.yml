@@ -1,0 +1,41 @@
+uuid: e0392f73-824d-4be6-bbcd-33e6a47dfc3f
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.node.migrate_example_producer.body
+    - field.field.node.migrate_example_producer.field_migrate_example_wine_regio
+    - node.type.migrate_example_producer
+  module:
+    - text
+    - user
+_core:
+  default_config_hash: 7dhRminbLjRBpTOIyk88jjZgsewWAqqAfjlIcqPDgkU
+id: node.migrate_example_producer.default
+targetEntityType: node
+bundle: migrate_example_producer
+mode: default
+content:
+  body:
+    label: hidden
+    type: text_default
+    weight: 101
+    settings: {  }
+    third_party_settings: {  }
+    region: content
+  field_migrate_example_wine_regio:
+    weight: 102
+    label: inline
+    settings:
+      link: true
+    third_party_settings: {  }
+    type: entity_reference_label
+    region: content
+  links:
+    weight: 100
+    settings: {  }
+    third_party_settings: {  }
+    region: content
+hidden:
+  langcode: true
+  search_api_excerpt: true

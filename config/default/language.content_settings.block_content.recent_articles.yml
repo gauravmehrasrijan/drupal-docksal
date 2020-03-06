@@ -1,0 +1,11 @@
+uuid: ce2f20f7-3140-45d3-9bba-7f09b7653a06
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.recent_articles
+id: block_content.recent_articles
+target_entity_type_id: block_content
+target_bundle: recent_articles
+default_langcode: site_default
+language_alterable: false
