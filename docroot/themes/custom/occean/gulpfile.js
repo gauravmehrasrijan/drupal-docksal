@@ -18,5 +18,5 @@ catch (e) {
 require('emulsify-gulp')(gulp, localConfig);
 
 //
-//  Trying to produce a git conflict here at master branch
+//  Trying to produce a git conflict here at (MASTER) branch
 //
