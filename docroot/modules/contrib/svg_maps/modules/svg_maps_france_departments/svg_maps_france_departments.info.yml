@@ -1,0 +1,13 @@
+name: 'Svg Maps France departments'
+type: module
+description: 'Svg Maps France departments'
+# core: 8.x
+package: 'SvgMaps'
+dependencies:
+  - svg_maps
+
+# Information added by Drupal.org packaging script on 2018-07-19
+version: '8.x-1.0-beta1'
+core: '8.x'
+project: 'svg_maps'
+datestamp: 1531988585

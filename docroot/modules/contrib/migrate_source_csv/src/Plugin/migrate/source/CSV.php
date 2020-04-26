@@ -104,6 +104,8 @@ class CSV extends SourcePluginBase implements ConfigurableInterface {
     if (empty($this->configuration['ids']) || !is_array($this->configuration['ids'])) {
       throw new \InvalidArgumentException('You must declare "ids" as a unique array of fields in your source settings.');
     }
+//	echo $plugin_id . "\n"; 
+//	print_r($this->configuration); exit;
     // IDs must be an array of strings.
     if ($this->configuration['ids'] !== array_unique(array_filter($this->configuration['ids'], 'is_string'))) {
       throw new \InvalidArgumentException('The ids must a flat array with unique string values.');

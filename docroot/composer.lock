@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "86f94bb75a12efde93d4e605f7a2f6a2",
+    "content-hash": "635144fdabcf22b5ccb6b5c3e8f51acf",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -963,6 +963,123 @@
             "time": "2019-06-08T11:03:04+00:00"
         },
         {
+            "name": "drupal-pattern-lab/add-attributes-twig-extension",
+            "version": "v1.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/drupal-pattern-lab/add-attributes-twig-extension.git",
+                "reference": "a86c5af2cd6b6996c41cd389df71683faa6701f5"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/drupal-pattern-lab/add-attributes-twig-extension/zipball/a86c5af2cd6b6996c41cd389df71683faa6701f5",
+                "reference": "a86c5af2cd6b6996c41cd389df71683faa6701f5",
+                "shasum": ""
+            },
+            "type": "library",
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Evan Willhite",
+                    "email": "evan@fourkitchens.com"
+                },
+                {
+                    "name": "Jeff Tomlinson",
+                    "email": "jeff@fourkitchens.com"
+                }
+            ],
+            "description": "Twig function that allows addition of attributes that can be rendered in both Drupal and Pattern Lab",
+            "time": "2017-08-17T03:05:07+00:00"
+        },
+        {
+            "name": "drupal-pattern-lab/attach-library-twig-extension",
+            "version": "v1.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/drupal-pattern-lab/attach-library-twig-extension.git",
+                "reference": "f7ad0656495039a7718c0189cfc4ff1623b56dfa"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/drupal-pattern-lab/attach-library-twig-extension/zipball/f7ad0656495039a7718c0189cfc4ff1623b56dfa",
+                "reference": "f7ad0656495039a7718c0189cfc4ff1623b56dfa",
+                "shasum": ""
+            },
+            "type": "library",
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Evan Willhite",
+                    "email": "evan@fourkitchens.com"
+                }
+            ],
+            "description": "Twig function that lets Pattern Lab use a simple version of Drupal's attach_library function to add javascript files per component.",
+            "time": "2018-12-04T22:15:15+00:00"
+        },
+        {
+            "name": "drupal-pattern-lab/bem-twig-extension",
+            "version": "v1.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/drupal-pattern-lab/bem-twig-extension.git",
+                "reference": "c772316bb6121823dcae157abfd1c173441e121d"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/drupal-pattern-lab/bem-twig-extension/zipball/c772316bb6121823dcae157abfd1c173441e121d",
+                "reference": "c772316bb6121823dcae157abfd1c173441e121d",
+                "shasum": ""
+            },
+            "type": "library",
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Evan Willhite",
+                    "email": "evan@fourkitchens.com"
+                },
+                {
+                    "name": "Jeff Tomlinson",
+                    "email": "jeff@fourkitchens.com"
+                }
+            ],
+            "description": "Twig function that inserts static classes into Pattern Lab and adds them to the Attributes object in Drupal",
+            "time": "2017-08-17T03:08:26+00:00"
+        },
+        {
+            "name": "drupal-pattern-lab/unified-twig-extensions",
+            "version": "v0.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/drupal-pattern-lab/unified-twig-extensions.git",
+                "reference": "862b9deccab544ca68e3aaaccc257d14acc9b1f6"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/drupal-pattern-lab/unified-twig-extensions/zipball/862b9deccab544ca68e3aaaccc257d14acc9b1f6",
+                "reference": "862b9deccab544ca68e3aaaccc257d14acc9b1f6",
+                "shasum": ""
+            },
+            "type": "drupal-module",
+            "notification-url": "https://packagist.org/downloads/",
+            "authors": [
+                {
+                    "name": "Salem Ghoweri",
+                    "role": "Contributor"
+                }
+            ],
+            "description": "Share Pattern Lab's custom Twig extensions with Drupal 8.",
+            "time": "2017-08-08T19:57:42+00:00"
+        },
+        {
             "name": "drupal/address",
             "version": "1.8.0",
             "source": {
@@ -1112,6 +1229,57 @@
             "support": {
                 "source": "http://cgit.drupalcode.org/admin_toolbar",
                 "issues": "https://www.drupal.org/project/issues/admin_toolbar"
+            }
+        },
+        {
+            "name": "drupal/components",
+            "version": "1.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/components.git",
+                "reference": "8.x-1.1"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/components-8.x-1.1.zip",
+                "reference": "8.x-1.1",
+                "shasum": "72af8ff1ca842556ee4b95335595c24703acdb75"
+            },
+            "require": {
+                "drupal/core": "~8.0"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "branch-alias": {
+                    "dev-1.x": "1.x-dev"
+                },
+                "drupal": {
+                    "version": "8.x-1.1",
+                    "datestamp": "1556870881",
+                    "security-coverage": {
+                        "status": "covered",
+                        "message": "Covered by Drupal's security advisory policy"
+                    }
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "JohnAlbin",
+                    "homepage": "https://www.drupal.org/user/32095"
+                },
+                {
+                    "name": "RobLoach",
+                    "homepage": "https://www.drupal.org/user/61114"
+                }
+            ],
+            "description": "Registers “component libraries” defined in modules and themes with the Twig system",
+            "homepage": "https://www.drupal.org/project/components",
+            "support": {
+                "source": "https://git.drupalcode.org/project/components"
             }
         },
         {
@@ -2269,6 +2437,57 @@
             }
         },
         {
+            "name": "drupal/svg_maps",
+            "version": "1.0.0-beta1",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/svg_maps.git",
+                "reference": "8.x-1.0-beta1"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/svg_maps-8.x-1.0-beta1.zip",
+                "reference": "8.x-1.0-beta1",
+                "shasum": "2de5774ae61ffe83baab2ee6a6c22128e7db5516"
+            },
+            "require": {
+                "drupal/core": "~8.0"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "branch-alias": {
+                    "dev-1.x": "1.x-dev"
+                },
+                "drupal": {
+                    "version": "8.x-1.0-beta1",
+                    "datestamp": "1531988581",
+                    "security-coverage": {
+                        "status": "not-covered",
+                        "message": "Project has not opted into security advisory coverage!"
+                    }
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0+"
+            ],
+            "authors": [
+                {
+                    "name": "klelostec",
+                    "homepage": "https://www.drupal.org/user/3455737"
+                }
+            ],
+            "description": "Manage maps into content entities.",
+            "homepage": "https://www.drupal.org/project/svg_maps",
+            "keywords": [
+                "Drupal"
+            ],
+            "support": {
+                "source": "http://cgit.drupalcode.org/svg_maps",
+                "issues": "https://www.drupal.org/project/issues/svg_maps"
+            }
+        },
+        {
             "name": "easyrdf/easyrdf",
             "version": "0.9.1",
             "source": {
@@ -2387,6 +2606,54 @@
                 "validator"
             ],
             "time": "2019-08-13T17:33:27+00:00"
+        },
+        {
+            "name": "fourkitchens/emulsify",
+            "version": "v3.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/fourkitchens/emulsify.git",
+                "reference": "82c50bfbfc0338b703a79df2364a22e549e066f6"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/fourkitchens/emulsify/zipball/82c50bfbfc0338b703a79df2364a22e549e066f6",
+                "reference": "82c50bfbfc0338b703a79df2364a22e549e066f6",
+                "shasum": ""
+            },
+            "require": {
+                "drupal-pattern-lab/add-attributes-twig-extension": "^1.0",
+                "drupal-pattern-lab/attach-library-twig-extension": "^1.0",
+                "drupal-pattern-lab/bem-twig-extension": "^1.0",
+                "drupal-pattern-lab/unified-twig-extensions": "^0.1",
+                "drupal/components": "^1.0"
+            },
+            "type": "drupal-theme",
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Brian Lewis",
+                    "email": "brian@fourkitchens.com"
+                },
+                {
+                    "name": "Chris Martin",
+                    "email": "chris.martin@fourkitchens.com"
+                },
+                {
+                    "name": "Evan Willhite",
+                    "email": "evan@fourkitchens.com"
+                },
+                {
+                    "name": "Randy Oest",
+                    "email": "randy@fourkitchens.com"
+                }
+            ],
+            "description": "Project template for Drupal 8 themes",
+            "homepage": "http://emulsify.info",
+            "time": "2018-12-15T04:46:36+00:00"
         },
         {
             "name": "guzzlehttp/guzzle",

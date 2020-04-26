@@ -1,0 +1,69 @@
+# This migration demonstrates a simple import from a JSON file.
+id: profiles
+label: csv feed of profiles
+migration_group: ccf_profiles
+migration_tags:
+  - json profile import
+source:
+  # We use the JSON source plugin.
+  plugin: csv
+  # Full path to the file.
+  path: 'modules/custom/ccf_profiles/artifacts/fucked.csv'
+  header_row_count: 1
+  keys:
+    - source_id
+
+  ids:
+    source_id:
+      type: integer
+
+  # Adding constant value.
+  constants:
+    status: 1
+    
+  fields:
+    -
+      name: title
+      label: 'First Name'
+#      selector: title
+    -
+      name: lastname
+      label: 'Last name'
+#      selector: lastname
+    -
+      name: position
+      label: 'Position'
+#      selector: position
+    -
+      name: jobtitle
+      label: 'Job Title'
+#      selector: jobtitle
+    -
+      name: practice
+      label: 'Practice'
+#      selector: practice
+      
+process:
+  # Note that the source field names here (name, description and price) were
+  # defined by the 'fields' configuration for the source plugin above.
+  type:
+    plugin: default_value
+    default_value: profiles
+  field_fr_contact_name: title
+  field_page_resource_title: lastname
+  field_position: position
+  field_event_id: jobtitle
+  field_event_phone: practice
+  sticky:
+    plugin: default_value
+    default_value: 0
+  uid:
+    plugin: default_value
+    default_value: 0
+destination:
+  plugin: 'entity:node'
+migration_dependencies: {  }
+dependencies:
+  enforced:
+    module:
+      - ccf_profiles

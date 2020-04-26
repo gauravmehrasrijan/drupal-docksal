@@ -1,0 +1,13 @@
+type: module
+name: CCF Profile migrate
+description: 'Profile imports from CSV'
+package: Custom
+# core: 8.x
+dependencies:
+  - drupal:migrate
+  - migrate_plus:migrate_plus
+  - migrate_tools:migrate_tools
+
+# Information added by Drupal.org packaging script on 2019-04-19
+version: '8.x-4.2'
+core: '8.x'
