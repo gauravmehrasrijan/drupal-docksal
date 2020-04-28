@@ -18,4 +18,4 @@ catch (e) {
 require('emulsify-gulp')(gulp, localConfig);
 
 
-// Add in master
+// Add in master, added in develop
