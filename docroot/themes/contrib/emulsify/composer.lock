@@ -1,7 +1,7 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
     "content-hash": "59880a6fb3be8b57330c8ce118fa01de",
@@ -882,7 +882,7 @@
             "version": "1.0.0",
             "source": {
                 "type": "git",
-                "url": "https://git.drupal.org/project/components",
+                "url": "https://git.drupalcode.org/project/components.git",
                 "reference": "8.x-1.0"
             },
             "dist": {
@@ -901,7 +901,7 @@
                 },
                 "drupal": {
                     "version": "8.x-1.0",
-                    "datestamp": "1461060840",
+                    "datestamp": "1556870881",
                     "security-coverage": {
                         "status": "covered",
                         "message": "Covered by Drupal's security advisory policy"
@@ -925,7 +925,7 @@
             "description": "Registers “component libraries” defined in modules and themes with the Twig system",
             "homepage": "https://www.drupal.org/project/components",
             "support": {
-                "source": "http://cgit.drupalcode.org/components"
+                "source": "https://git.drupalcode.org/project/components"
             }
         },
         {
@@ -2009,16 +2009,16 @@
         },
         {
             "name": "symfony/dependency-injection",
-            "version": "v3.4.14",
+            "version": "v3.4.37",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/dependency-injection.git",
-                "reference": "1c0e679e522591fd744fdf242fec41a43d62b2b1"
+                "reference": "22000f10c9e1cfef051e8b4de46815b41a0223fc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/dependency-injection/zipball/1c0e679e522591fd744fdf242fec41a43d62b2b1",
-                "reference": "1c0e679e522591fd744fdf242fec41a43d62b2b1",
+                "url": "https://api.github.com/repos/symfony/dependency-injection/zipball/22000f10c9e1cfef051e8b4de46815b41a0223fc",
+                "reference": "22000f10c9e1cfef051e8b4de46815b41a0223fc",
                 "shasum": ""
             },
             "require": {
@@ -2076,7 +2076,7 @@
             ],
             "description": "Symfony DependencyInjection Component",
             "homepage": "https://symfony.com",
-            "time": "2018-07-29T15:19:31+00:00"
+            "time": "2020-01-08T11:20:51+00:00"
         },
         {
             "name": "symfony/event-dispatcher",
@@ -3123,6 +3123,7 @@
                 "psr",
                 "psr-7"
             ],
+            "abandoned": "laminas/laminas-diactoros",
             "time": "2018-08-10T14:16:32+00:00"
         },
         {
@@ -3168,6 +3169,7 @@
                 "escaper",
                 "zf"
             ],
+            "abandoned": "laminas/laminas-escaper",
             "time": "2018-04-25T15:48:53+00:00"
         },
         {
@@ -3229,6 +3231,7 @@
                 "feed",
                 "zf"
             ],
+            "abandoned": "laminas/laminas-feed",
             "time": "2018-08-01T13:53:20+00:00"
         },
         {
@@ -3275,6 +3278,7 @@
                 "stdlib",
                 "zf"
             ],
+            "abandoned": "laminas/laminas-stdlib",
             "time": "2018-04-30T13:50:40+00:00"
         }
     ],
