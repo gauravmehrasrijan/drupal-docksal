@@ -1,0 +1,29 @@
+<?php
+
+/**
+ * @file course.install
+ * Install and update functions for Courses.
+ */
+
+/**
+ * Implements hook_install().
+ *
+ * Install a default content type, set some defaults.
+ */
+function course_install() {
+  // @todo rework flag for d8
+  //variable_set('course_use_course', 1);
+
+  user_role_grant_permissions(DRUPAL_AUTHENTICATED_RID, array('view course'));
+}
+
+/**
+ * Implements hook_schema().
+ *
+ * @todo add indexes
+ */
+function course_schema() {
+  $schema = array();
+
+  return $schema;
+}

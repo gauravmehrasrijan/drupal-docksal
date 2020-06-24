@@ -1,0 +1,68 @@
+course.admin:
+  title: Course
+  route_name: course.admin
+  description: 'Administer course settings.'
+  parent: system.admin
+
+# Admin blocks
+course.admin.config:
+  title: Settings
+  route_name: course.admin.config
+  parent: course.admin
+  weight: 1
+course.admin.manage:
+  title: Manage
+  route_name: course.admin.manage
+  parent: course.admin
+  weight: 2
+course.admin.structure:
+  title: Structure
+  route_name: course.admin.structure
+  parent: course.admin
+  weight: 4
+
+entity.course_enrollment_type.collection:
+  title: 'Enrollment types'
+  parent:  course.admin.structure
+  description: 'Create and manage enrollment types.'
+  route_name: entity.course_enrollment_type.collection
+entity.course.collection:
+  title: 'Courses'
+  parent:  course.admin.manage
+  description: 'Create and manage courses.'
+  route_name: entity.course.collection
+entity.course_type.collection:
+  title: 'Course types'
+  parent:  course.admin.structure
+  description: 'Create and manage course types.'
+  route_name: entity.course_type.collection
+course.report_settings:
+  title: 'Reports'
+  parent:  course.admin.reports
+  description: 'Manage course reports.'
+  route_name: course.report_settings_form
+course.appearance_settings:
+  title: 'Appearance'
+  parent:  course.admin.config
+  description: 'Settings for course appearance.'
+  route_name: course.appearance_settings_form
+course.enrollment_settings:
+  title: 'Enrollment'
+  parent:  course.admin.config
+  description: 'Settings for course enrollments.'
+  route_name: course.enrollment_settings_form
+course.object_settings:
+  title: 'Objects'
+  parent:  course.admin.config
+  description: 'Settings for course objects.'
+  route_name: course.object_settings_form
+course.admin.reports:
+  title: Course reports
+  route_name: course.admin.config
+  description: 'Access course reports.'
+  parent: system.admin_reports
+course.admin.object_types:
+  title: Course object types
+  route_name: entity.course_object_type.collection
+  description: 'Access course reports.'
+  parent: course.admin.structure

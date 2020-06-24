@@ -1,0 +1,26 @@
+name: Course
+type: module
+core: 8.x
+description: Create Drupal e-learning courses.
+dependencies:
+ - datetime
+ - datetime_range
+ - entity
+ # maybe move to course_node
+ - inline_entity_form
+ - views_bulk_operations
+ - options
+test_dependencies:
+  - acl
+  - content_access
+  - entity_token
+  - node_access_book
+  - rules
+php: 5.4.0
+package: Course
+configure: course.admin
+
+# Information added by Drupal.org packaging script on 2020-04-02
+version: '3.0.0-alpha1'
+project: 'course'
+datestamp: 1585850435

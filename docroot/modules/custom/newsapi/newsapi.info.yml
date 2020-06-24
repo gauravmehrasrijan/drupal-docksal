@@ -1,0 +1,9 @@
+name: newsapi
+type: module
+description: 'A small plugin to import news from newsapi.org, Use this plugin to pull latest news and feed from top sources around the glob.'
+core: 8.x
+package: Custom
+configure: newsapi.settings
+dependencies:
+  - 'drupal:system (>=8.5.11)'
+  - menu_ui

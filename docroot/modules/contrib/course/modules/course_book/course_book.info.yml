@@ -1,0 +1,13 @@
+name: Course book
+description: Supports Drupal Books as course objects, with configurable completion requirements.
+package: Course objects
+core: 8.x
+type: module
+dependencies:
+  - book
+  - course
+
+# Information added by Drupal.org packaging script on 2020-04-02
+version: '3.0.0-alpha1'
+project: 'course'
+datestamp: 1585850435

@@ -1,0 +1,8 @@
+langcode: en
+status: true
+dependencies:
+  enforced:
+    module:
+      - course_quiz
+id: quiz
+label: 'Quiz'

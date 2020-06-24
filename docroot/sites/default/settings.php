@@ -255,6 +255,8 @@ $config_directories = array(
     CONFIG_SYNC_DIRECTORY => dirname($app_root) . '/config/' . basename($site_path),
 );
 
+
+$settings['config_sync_directory'] = dirname($app_root) . '/config/' . basename($site_path);
 /**
  * Settings:
  *
@@ -660,6 +662,7 @@ if ($settings['hash_salt']) {
 # $config['system.site']['name'] = 'My Drupal site';
 # $config['system.theme']['default'] = 'stark';
 # $config['user.settings']['anonymous'] = 'Visitor';
+// $settings['file_temp_path'] = $_ENV['TEMP'];
 
 /**
  * Fast 404 pages:

@@ -1,0 +1,17 @@
+course.enrollment_type_add:
+  route_name: entity.course_enrollment_type.add_form
+  title: 'Add course enrollment type'
+  appears_on:
+    - entity.course_enrollment_type.collection
+
+course.type_add:
+  route_name: entity.course_type.add_form
+  title: 'Add course type'
+  appears_on:
+    - entity.course_type.collection
+
+course.add:
+  route_name: entity.course.add_page
+  title: 'Add course'
+  appears_on:
+    - entity.course.collection

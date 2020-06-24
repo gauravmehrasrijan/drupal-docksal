@@ -1,0 +1,13 @@
+name: Course Certificate
+type: module
+description: Uses Certificate module to award a certificate when a course is completed.
+package: Course objects
+core: 8.x
+dependencies:
+  - course
+  - certificate
+
+# Information added by Drupal.org packaging script on 2020-04-02
+version: '3.0.0-alpha1'
+project: 'course'
+datestamp: 1585850435

@@ -1,0 +1,21 @@
+uuid: d89e2457-33c8-4239-a5b3-c7d7d9be7d8b
+langcode: en
+status: true
+dependencies:
+  module:
+    - course
+  theme:
+    - stark
+id: courseoutline
+theme: stark
+region: sidebar_first
+weight: 0
+provider: null
+plugin: course_outline_block
+settings:
+  id: course_outline_block
+  label: 'Course outline'
+  provider: course
+  label_display: visible
+visibility: {  }
+

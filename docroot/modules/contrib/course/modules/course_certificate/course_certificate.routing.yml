@@ -1,0 +1,41 @@
+certificate.course:
+  path: 'course/{course}/certificate'
+  defaults:
+    _controller: '\Drupal\course_certificate\Controller\CertificateTabController::renderDefaultCertificateTab'
+    _title: 'Claim Certificate'
+  requirements:
+   _custom_access: '\Drupal\course_certificate\Controller\CertificateTabController::accessDefaultTab'
+  options:
+    parameters:
+      course:
+        type: entity:course
+
+certificate.course.user:
+  path: 'course/{course}/certificate/{account}'
+  defaults:
+    _controller: '\Drupal\course_certificate\Controller\CertificateTabController::renderCertificateTab'
+    _title: 'Download Certificate'
+  requirements:
+   _custom_access: '\Drupal\course_certificate\Controller\CertificateTabController::accessTab'
+  options:
+    parameters:
+      course:
+        type: entity:course
+      account:
+       type: entity:user
+
+certificate.course.pdf:
+  path: 'course/{course}/certificate/{account}/{template}'
+  defaults:
+    _controller: '\Drupal\course_certificate\Controller\CertificateTabController::returnPdf'
+    _title: 'Preview Certificate'
+  requirements:
+   _custom_access: '\Drupal\course_certificate\Controller\CertificateTabController::accessPdf'
+  options:
+    parameters:
+      course:
+        type: entity:course
+      account:
+       type: entity:user
+      template:
+       type: entity:certificate_template

@@ -1,0 +1,16 @@
+newsapi.news_config_form:
+  path: '/admin/config/newsapi/config'
+  defaults:
+    _form: '\Drupal\newsapi\Form\NewsConfigForm'
+    _title: 'Configure Newsapi'
+  requirements:
+    _permission: 'access administration pages'
+  options:
+    _admin_route: TRUE
+newsapi.news_search_form:
+  path: '/admin/newsapi/search'
+  defaults:
+    _form: '\Drupal\newsapi\Form\NewsSearchForm'
+    _title: 'Explore and save news from newsapi.org'
+  requirements:
+    _access: 'TRUE'

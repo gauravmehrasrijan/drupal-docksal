@@ -1,0 +1,20 @@
+<div class="search-result-container">
+    Found <code>{{totalResults}}</code> news to display
+{% for article in articles %}
+    <div class="row" style="margin-top: 20px;">
+        <input type="checkbox" value="1" />
+        <h2><a target="_blank" href="{{ article.url }}">{{ article.title }}</a></h2>
+        <br>
+        <div style="width:100%; position: relative; float: left">
+            <div style="float: left; width: 20%">
+                <img style="display: inline-block; height: 100px; max-width: none;" src="{{ article.urlToImage }}" />
+            </div>
+            <div style="float: left; width: 80%">
+                <p style="padding:10px;">{{ article.content|raw }}</p>
+                <code>Source: {{article.source.name}}, </code>
+                <code>Published at: {{article.publishedAt| date("m/d/Y")}}</code>
+            </div>
+        </div>
+    </div>
+{% endfor %}
+</div>

@@ -18,20 +18,24 @@
         "composer/installers": "^1.2",
         "drupal/address": "^1.4",
         "drupal/admin_toolbar": "^2.0",
+        "drupal/content_lock": "^2.0",
         "drupal/core-composer-scaffold": "^8.8",
         "drupal/core-project-message": "^8.8",
         "drupal/core-recommended": "^8.8",
         "drupal/core-vendor-hardening": "^8.8",
+        "drupal/course": "^3.0",
         "drupal/devel": "^2.1",
         "drupal/migrate_plus": "^4.2",
         "drupal/migrate_source_csv": "^3.2",
         "drupal/migrate_tools": "^4.5",
+        "drupal/pathauto": "^1.6",
         "drupal/search_api_glossary": "^4.0",
         "drupal/search_api_solr": "^3.8",
         "drupal/simple_glossary": "^1.10",
         "drupal/smart_glossary": "^1.0",
         "drupal/svg_maps": "^1.0",
-        "fourkitchens/emulsify": "^3.1"
+        "fourkitchens/emulsify": "^3.1",
+        "drupal/core-dev": "^8.8"
     },
     "require-dev": {
     },
@@ -53,7 +57,10 @@
         "drupal-scaffold": {
             "locations": {
                 "web-root": "./"
-            }
+            },
+            "allowed-packages": [
+                "drupal/core"
+            ]
         },
         "installer-paths": {
             "core": ["type:drupal-core"],

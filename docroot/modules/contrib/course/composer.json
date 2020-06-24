@@ -1,0 +1,17 @@
+{
+  "name": "drupal/course",
+  "description": "Create e-learning courses with tracked requirements for completion.",
+  "type": "drupal-module",
+  "homepage": "https://www.drupal.org/project/course",
+  "authors": [
+    {
+      "name": "Devin Zuczek",
+      "homepage": "https://www.drupal.org/u/djdevin"
+    }
+  ],
+  "support": {
+    "issues": "https://www.drupal.org/project/issues/course",
+    "source": "http://git.drupal.org/project/course.git"
+  },
+  "minimum-stability": "dev"
+}

@@ -1,0 +1,9 @@
+langcode: en
+status: true
+dependencies:
+  enforced:
+    module:
+      - course_webform
+id: webform
+label: 'Webform'
+

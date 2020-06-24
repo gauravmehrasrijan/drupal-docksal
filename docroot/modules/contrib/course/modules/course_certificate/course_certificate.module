@@ -1,0 +1,17 @@
+<?php
+
+/**
+ * Implements hook_course_outline_completion_links_alter().
+ *
+ * Add a download certificate link.
+ */
+function course_certificate_course_outline_completion_links_alter(&$links, $node, $account) {
+  $course = course_get_course($node);
+  if (course_certificate_course_has_certificate($course)) {
+    $links['certificate'] = array(
+      t('Download certificate'),
+      "node/$node->id()/certificate",
+      t('Download a PDF of your certificate.'),
+    );
+  }
+}

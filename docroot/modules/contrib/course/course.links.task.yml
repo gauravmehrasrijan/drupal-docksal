@@ -1,0 +1,41 @@
+# Add a default tab so field UI can add tabs.
+course.report_settings_tab:
+  route_name: course.report_settings_form
+  title: Settings
+  base_route: course.report_settings_form
+
+# Add a default tab so field UI can add tabs.
+course.object_settings_tab:
+  route_name: course.object_settings_form
+  title: Settings
+  base_route: course.object_settings_form
+
+entity.course.canonical:
+  route_name: entity.course.canonical
+  base_route: entity.course.canonical
+  title: 'View'
+  weight: 0
+
+course.page_edit:
+  route_name: entity.course.edit_form
+  base_route: entity.course.canonical
+  title: Edit
+  weight: 1
+
+course.take_tab:
+  title: 'Take course'
+  route_name: course.take
+  base_route: entity.course.canonical
+  weight: 2
+
+course.outline_tab:
+  title: 'Course outline'
+  route_name: course.outline
+  base_route: entity.course.canonical
+  weight: 3
+
+course.manage_tab:
+  title: 'Manage'
+  route_name: course.manage
+  base_route: entity.course.canonical
+  weight: 3

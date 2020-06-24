@@ -1,0 +1,25 @@
+<?php
+
+use Drupal\course_quiz\Plugin\course\CourseObject\CourseObjectQuiz;
+use Drupal\quiz\Entity\QuizResult;
+use Drupal\user\Entity\User;
+
+/**
+ * Implements hook_quiz_result_update().
+ *
+ * @deprecated But there is no alternative. Switch to entity event subscriber
+ * when it becomes available in core.
+ *
+ * @see https://www.drupal.org/project/drupal/issues/2551893
+ */
+function course_quiz_quiz_result_update(QuizResult $quiz_result) {
+  if ($quiz_result->get('is_evaluated')->getString()) {
+    $quiz = $quiz_result->getQuiz();
+    $account = User::load($quiz_result->get('uid')->getString());
+
+    if ($courseObject = course_get_course_object('quiz', $quiz->id())) {
+      /* @var $courseObject CourseObjectQuiz */
+      $courseObject->getFulfillment($account)->grade($quiz_result);
+    }
+  }
+}

@@ -1,0 +1,184 @@
+# Landing page for course outline.
+course.outline:
+  path: 'course/{course}/outline'
+  defaults:
+    _form: '\Drupal\course\Form\CourseOutlineForm'
+    _title: 'Course outline'
+  requirements:
+    _entity_access: 'course.update'
+  options:
+    _admin_route: TRUE
+    parameters:
+      course:
+        type: 'entity:course'
+
+# Landing page for course completion.
+course.complete:
+  path: 'course/{course}/complete'
+  defaults:
+    _controller: '\Drupal\course\Controller\CourseController::renderComplete'
+    _title: 'Course complete'
+  options:
+    parameters:
+      course:
+        type: 'entity:course'
+  requirements:
+    _custom_access: '\Drupal\course\Controller\CourseController::completionAccess'
+
+
+# Take course tab.
+course.take:
+  path: 'course/{course}/take'
+  defaults:
+    _controller: '\Drupal\course\Controller\CourseController::rendertake'
+    _title: 'Take course'
+  requirements:
+    # Access is handled in the controller.
+    _access: 'TRUE'
+  options:
+    parameters:
+      course:
+        type: 'entity:course'
+
+# Reports page listing each course object.
+course.reports.objects:
+  path: 'course/{course}/course-reports/objects'
+  defaults:
+    _controller: '\Drupal\course\Controller\CourseReportController::render'
+    _title: 'Course reports'
+  requirements:
+    _entity_access: 'course.update'
+  options:
+    parameters:
+      course:
+        type: 'entity:course'
+
+# Global report area.
+course.admin.reports:
+  path: 'admin/reports/course'
+  defaults:
+    _controller: '\Drupal\system\Controller\SystemController::systemAdminMenuBlockPage'
+    _title: 'Course reports'
+  requirements:
+    _permission: 'access all course reports'
+
+# Course object take.
+course.object:
+  path: 'course/{course}/object/{course_object}'
+  defaults:
+    _controller: '\Drupal\course\Controller\CourseObjectController::render'
+    _title: 'Course object router'
+  requirements:
+    _entity_access: 'course_object.take'
+  options:
+    parameters:
+      course:
+        type: 'entity:course'
+      course_object:
+        type: 'entity:course_object'
+
+# Course object edit.
+course.object.options:
+  path: 'course/{course}/object/{course_object}/options'
+  defaults:
+    _form: '\Drupal\course\Form\CourseObjectForm'
+    _title: 'Course object settings'
+  requirements:
+    _entity_access: 'course.update'
+  options:
+    parameters:
+      course:
+        type: 'entity:course'
+      course_object:
+        # This is not an entity because it may be a temporary ID.
+        type: 'course_object'
+
+# Course object restore.
+course.object.restore:
+  path: 'course/{course}/object/{course_object}/restore'
+  defaults:
+    _controller: '\Drupal\course\Controller\CourseObjectController::restoreObject'
+    _title: 'Restore object'
+  requirements:
+    _entity_access: 'course.update'
+  options:
+    parameters:
+      course:
+        type: 'entity:course'
+      course_object:
+        # This is not an entity because it may be a temporary ID.
+        type: 'course_object'
+
+course.admin:
+  path: '/admin/course'
+  defaults:
+    _controller: '\Drupal\course\Controller\CourseAdminController::overview'
+    _title: 'Course'
+  requirements:
+    _permission: 'administer course'
+
+# Admin block routes
+course.admin.config:
+  path: '/admin/course/config'
+  defaults:
+    _controller: '\Drupal\system\Controller\SystemController::systemAdminMenuBlockPage'
+    _title: 'Configuration'
+  requirements:
+    _permission: 'administer course'
+course.admin.manage:
+  path: '/admin/course/manage'
+  defaults:
+    _controller: '\Drupal\system\Controller\SystemController::systemAdminMenuBlockPage'
+    _title: 'Courses'
+  requirements:
+    _permission: 'administer course'
+course.admin.structure:
+  path: '/admin/course/config/structure'
+  defaults:
+    _controller: '\Drupal\system\Controller\SystemController::systemAdminMenuBlockPage'
+    _title: 'Structure'
+  requirements:
+    _permission: 'administer course'
+
+course.appearance_settings_form:
+  path: '/admin/course/appearance'
+  defaults:
+    _form: '\Drupal\course\Form\CourseAppearanceSettingsForm'
+    _title: 'Course appearance settings'
+  requirements:
+    _permission: 'administer course'
+
+course.object_settings_form:
+  path: '/admin/course/object'
+  defaults:
+    _form: '\Drupal\course\Form\CourseObjectSettingsForm'
+    _title: 'Course object settings'
+  requirements:
+    _permission: 'administer course'
+
+course.enrollment_settings_form:
+  path: '/admin/course/enrollment'
+  defaults:
+    _form: '\Drupal\course\Form\CourseEnrollmentSettingsForm'
+    _title: 'Course enrollment settings'
+  requirements:
+    _permission: 'administer course'
+
+course.report_settings_form:
+  path: '/admin/course/report'
+  defaults:
+    _form: '\Drupal\course\Form\CourseReportSettingsForm'
+    _title: 'Course report settings'
+  requirements:
+    _permission: 'administer course'
+
+course.manage:
+  path: '/course/{course}/manage'
+  defaults:
+    _form: '\Drupal\course\Form\CourseManageForm'
+  requirements:
+    _entity_access: 'course.update'
+  options:
+    parameters:
+      course:
+        type: 'entity:course'

@@ -1,0 +1,6 @@
+newsapi.news_config_form:
+  title: 'Configure Newsapi'
+  route_name: newsapi.news_config_form
+  description: 'Configure your newsapi mpdule'
+  parent: system.admin_config_system
+  weight: 99

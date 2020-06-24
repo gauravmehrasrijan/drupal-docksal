@@ -1,0 +1,14 @@
+services:
+  course.event_subscriber:
+    class: '\Drupal\course\EventSubscriber\CourseEventSubscriber'
+    tags:
+      - { name: 'event_subscriber' }
+  plugin.manager.course.object.access:
+    class: Drupal\course\Plugin\CourseObjectAccessPluginManager
+    parent: default_plugin_manager
+  plugin.manager.course.outline:
+    class: Drupal\course\Plugin\CourseOutlinePluginManager
+    parent: default_plugin_manager
+  plugin.manager.course.object:
+    class: Drupal\course\Plugin\CourseObjectPluginManager
+    parent: default_plugin_manager

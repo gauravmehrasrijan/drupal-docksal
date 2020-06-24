@@ -1,0 +1,75 @@
+<?php
+
+/**
+ * Implements hook_webform_results_download_submission_information_info().
+ *
+ * Add the course to webform submission data.
+ */
+function course_webform_webform_results_download_submission_information_info() {
+  $out = array();
+
+  // Add course title.
+  $out['course_id'] = 'Course ID';
+  $out['course_title'] = 'Course title';
+
+  return $out;
+}
+
+/**
+ * Implements hook_webform_results_download_submission_information().
+ *
+ * Add the course to webform submission data.
+ */
+function course_webform_webform_results_download_submission_information_data($token, $submission, array $options, $serial_start, $row_count) {
+  if (in_array($token, array('course_id', 'course_title'))) {
+    $query = \Drupal::database()->select('course_outline_fulfillment', 'cof')
+      ->fields('n', array('nid', 'title'))
+      ->condition('cof.instance', strval($submission->sid))
+      ->condition('co.object_type', 'webform');
+
+    $query->join('course_outline', 'co', 'co.coid = cof.coid');
+    $query->join('node', 'n', 'co.nid = n.nid');
+
+    if ($row = $query->execute()->fetch()) {
+      if ($token == 'course_id') {
+        return $row->nid;
+      }
+      if ($token == 'course_title') {
+        return $row->title;
+      }
+    }
+  }
+}
+
+/**
+ * Implements hook_webform_submission_insert().
+ *
+ * @deprecated But there is no alternative. Switch to entity event subscriber
+ * when it becomes available in core.
+ *
+ * @see https://www.drupal.org/project/drupal/issues/2551893
+ */
+function course_webform_webform_submission_insert(Drupal\webform\Entity\WebformSubmission $webform_submission) {
+  if (!$webform_submission->isDraft()) {
+    // Find the course object associated with this webform.
+    if ($courseObject = course_get_course_object('webform', $webform_submission->getWebform()->id())) {
+      /* @var $courseObject CourseObjectWebform */
+      $fulfillment = $courseObject->getFulfillment($webform_submission->getOwner());
+      $sids = (array) $fulfillment->getOption('sids');
+      $sids[] = $webform_submission->id();
+      $fulfillment->setOption('instance', $webform_submission->id())->setOption('sids', $sids)->setComplete()->save();
+    }
+  }
+}
+
+/**
+ * Implements hook_webform_submission_update().
+ *
+ * @deprecated But there is no alternative. Switch to entity event subscriber
+ * when it becomes available in core.
+ *
+ * @see https://www.drupal.org/project/drupal/issues/2551893
+ */
+function course_webform_webform_submission_update(Drupal\webform\Entity\WebformSubmission $webform_submission) {
+  course_webform_webform_submission_insert($webform_submission);
+}

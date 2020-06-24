@@ -1,0 +1,7 @@
+node.type.*.third_party.course_content:
+  type: mapping
+  label: 'Per-content type course content settings'
+  mapping:
+    use:
+      type: boolean
+      label: 'Use as course content'

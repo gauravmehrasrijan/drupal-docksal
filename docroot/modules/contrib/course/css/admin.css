@@ -1,0 +1,11 @@
+table#edit-course-outline tr.deleted {
+  background-color: lightcoral;
+}
+
+table#edit-course-outline .error {
+  font-weight: bold;
+}
+
+table#edit-course-outline .warning {
+  color: red;
+}

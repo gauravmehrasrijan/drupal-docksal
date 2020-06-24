@@ -1,0 +1,21 @@
+uuid: 7e31fd7b-a314-4e39-be8d-660ae43e0d26
+langcode: en
+status: true
+dependencies:
+  module:
+    - course
+  theme:
+    - stark
+id: coursenavigation
+theme: stark
+region: sidebar_second
+weight: 0
+provider: null
+plugin: course_navigation_block
+settings:
+  id: course_navigation_block
+  label: 'Course navigation'
+  provider: course
+  label_display: visible
+visibility: {  }
+

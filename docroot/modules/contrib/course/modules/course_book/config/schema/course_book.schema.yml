@@ -1,0 +1,9 @@
+course_book.settings:
+  type: config_object
+  mapping:
+    default_node_type:
+      type: string
+      label: Default book type to use
+    depth:
+      type: integer
+      label: Depth of book tree
