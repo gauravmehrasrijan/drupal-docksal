@@ -1,0 +1,1109 @@
+<?php
+
+use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Datetime\DrupalDateTime;
+use Drupal\Core\Field\FieldDefinitionInterface;
+use Drupal\Core\Field\FieldItemListInterface;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Session\AccountInterface;
+use Drupal\course\Entity\Course;
+use Drupal\course\Entity\CourseObject;
+use Drupal\course\Entity\CourseType;
+use Drupal\course\Plugin\CourseObjectAccessPluginManager;
+use Drupal\field\Entity\FieldConfig;
+use Drupal\node\Entity\Node;
+use Drupal\node\Entity\NodeType;
+use Drupal\user\Entity\User;
+
+/**
+ * @file course.module
+ * Core functionality for Courses.
+ */
+// Course exporting functions
+require_once 'includes/course.exporting.inc';
+// Rules support
+require_once 'includes/course.rules.inc';
+
+/**
+ * Implements hook_menu().
+ */
+function course_menu() {
+  $items['node/%course/object/%course_object/%ctools_js/nav'] = array(
+    'page callback' => 'course_ajaj_fulfullment_check',
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK,
+    'page arguments' => array(1, 3, 5),
+  );
+
+  if (Drupal::moduleHandler()->moduleExists('devel_generate')) {
+    $items['admin/config/development/generate/course'] = array(
+      'title' => 'Generate course',
+      'description' => 'Generate a given number of courses and object.',
+      'access arguments' => array('administer course'),
+      'page callback' => 'drupal_get_form',
+      'page arguments' => array('course_generate_form'),
+      'file' => 'course.devel.inc',
+    );
+  }
+
+  return $items;
+}
+
+/**
+ * Implements hook_course_handlers().
+ *
+ * @see course_menu()
+ * @see course_settings_overview()
+ */
+function course_course_handlers() {
+  return array(
+    'context' => array(
+      'node' => array(
+        'callback' => 'course_context',
+      ),
+    ),
+  );
+}
+
+/**
+ * Get course handlers.
+ *
+ * @param string $type
+ *   (optional) The course handler type to return.
+ *   If no type is specified, all types are returned.
+ *
+ * @return array
+ *   A merged, structured array of course handlers, optionally limited by type.
+ *
+ * @return array
+ *   An array of hook implementations keyed by module name, containing:
+ *   - A single handler type definition, if the $type parameter is passed.
+ *   - Or an associative array of all course handler definitions keyed by type.
+ */
+function course_get_handlers() {
+  /* @var $pluginManager CourseObjectAccessPluginManager */
+  $pluginManager = Drupal::service('plugin.manager.course.object');
+  $plugins = $pluginManager->getDefinitions();
+  return $plugins;
+}
+
+/**
+ * Fulfillment check callback.
+ *
+ * This function is polled from nav.js to check remote fulfillments for external
+ * learning objects.
+ */
+function course_ajaj_fulfullment_check($node, $courseObject, $js = FALSE) {
+  global $user;
+  $account = $user;
+
+  // @todo most implements pull the current user
+  $courseObject->poll();
+  if (course_node_is_course($node)) {
+    course_set_context($node);
+  }
+  module_load_include('inc', 'course', 'includes/course.block');
+
+  course_get_course($node);
+  $block = block_load('course', 'navigation');
+  $block_rend = _block_render_blocks(array($block));
+  drupal_json_output(array(
+    'content' => $block_rend['course_navigation']->content['#markup'],
+    'complete' => $courseObject->getFulfillment($account)->isComplete(),
+  ));
+}
+
+/**
+ * Start an editing session for this course. Populate the session from
+ * persistent storage.
+ *
+ * @param Course $course
+ *   A Course.
+ */
+function course_editing_start($course) {
+  if (empty($_SESSION['course'][$course->id()]['editing'])) {
+    // Start editing cache from what we have in DB.
+    foreach ($course->getObjects() as $courseObject) {
+      $_SESSION['course'][$course->id()]['editing'][$courseObject->getId()] = $courseObject->getOptions();
+    }
+  }
+}
+
+/**
+ * Menu title handler for the Take course tab.
+ *
+ * @return string
+ *   "Review course" or "Take course", depending on the current user's
+ *   completion status.
+ */
+function course_take_title($node) {
+  global $user;
+  $report = course_enrollment_load($node, $user);
+  return ($user->uid > 1 && isset($report->complete) && $report->complete) ? t('Review course') : t('Take course');
+}
+
+/**
+ * Menu access callback to determins if the take course button should display
+ * on the course node.
+ *
+ * This differs from course_access_course('take', ) as it only returns a boolean.
+ *
+ * @param object $node
+ *   The course node.
+ *
+ * @see course_uc_token_values()
+ */
+function course_take_course_menu_access($node) {
+  global $user;
+  $courses = &drupal_static(__FUNCTION__, array());
+
+  if (!isset($courses[$node->id()])) {
+    // Allow modules to restrict menu access to the take course tab.
+    $hooks = Drupal::moduleHandler()->invokeAll('course_has_take', $node, $user);
+    $courses[$node->id()] = !in_array(FALSE, $hooks);
+  }
+
+  return $courses[$node->id()];
+}
+
+/**
+ * Callback for checking course settings permission.
+ */
+function course_settings_access($node) {
+  return $node->access('update');
+}
+
+/**
+ * Saves course objects.
+ *
+ * @param CourseObject[] $objects
+ *   An array of course object definitions.
+ * @param Course $course
+ *   (optional) An instantiated Course, from course_get_course().
+ */
+function course_save_objects(array $objects, Course $course = NULL) {
+  foreach ($objects as $object) {
+    // Check if this course object already exists in the database.
+    if (isset($object->coid)) {
+      // Check if this object does not belong to the current node.
+      if ($object->nid != $course->getNode()->nid) {
+        // We are importing or cloning. Ensure the necessary keys are empty,
+        // in order to prepare a new object using this object's definitions.
+        $unset = array('coid', 'nid', 'uuid', 'uniqid');
+        foreach ($unset as $key) {
+          if (isset($object->{$key})) {
+            unset($object->{$key});
+          }
+        }
+
+        // Replace the nid key, to properly associate the current course node
+        // with this course object.
+        $object->nid = $course->getNode()->nid;
+      }
+    }
+
+    $object->save();
+  }
+}
+
+/**
+ * Un-enroll the user.
+ *
+ * Deletes course report entries, course enrollments, and object fulfillment
+ * records.
+ *
+ * @deprecated Use Course::unEnroll($account);
+ *
+ * @param Course $node
+ *   A course node.
+ * @param AccountInterface $user
+ *   A user.
+ */
+function course_unenroll(Course $course, AccountInterface $account) {
+  return $course->unEnroll($account);
+}
+
+/**
+ * Check if the user has enrolled in a course.
+ *
+ * @deprecated Use Course::isEnrolled($account);
+ *
+ * @param mixed $nid
+ *   A course node ID.
+ * @param mixed $uid
+ *   A user ID.
+ *
+ * @return bool
+ *   TRUE if the user is enrolled, FALSE otherwise.
+ */
+function course_enrollment_check(Course $course, AccountInterface $account) {
+  return $course->isEnrolled($account);
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ *
+ * Add third party settings to the node type form.
+ */
+function course_form_node_type_form_alter(&$form, FormStateInterface $form_state) {
+  $node = $form_state->getFormObject()->getEntity();
+
+  // Alter the node type's configuration form to add our setting.
+  $form['course'] = array(
+    '#type' => 'details',
+    '#title' => t('Course settings'),
+    '#collapsible' => TRUE,
+    '#collapsed' => TRUE,
+    '#access' => Drupal::currentUser()->hasPermission('administer course'),
+    '#group' => 'additional_settings',
+  );
+  $form['course']['course_enabled'] = array(
+    '#title' => t('Use as course type'),
+    '#type' => 'checkbox',
+    '#default_value' => $node->getThirdPartySetting('course', 'enabled'),
+    '#description' => t('This content type will have %course functionality.', array('%course' => 'Course')),
+  );
+
+  // Configurable date fields.
+  // @todo D8
+  if (FALSE && Drupal::moduleHandler()->moduleExists('date')) {
+    $options = array();
+    $options[0] = t('<Not specified>');
+    $fields = field_info_fields();
+    foreach ($fields as $field) {
+      if ($field['module'] == 'date') {
+        foreach ($field['columns'] as $column => $value) {
+          if (!empty($field['bundles']['node']) && in_array($form['#node_type']->type, $field['bundles']['node']) && in_array($column, array('value', 'value2'))) {
+            $position = $column == 'value' ? 'From' : 'To';
+            // Use the same label pattern as date_api_fields() for consistency
+            // with Views, and in case we support other date options than
+            // content date fields.
+            $info = field_info_instance('node', $field['field_name'], $form['#node_type']->type);
+            $label = t('Content: !label (!name) - @position date', array('!label' => $info['label'], '!name' => $field['field_name'], '@position' => $position));
+            #$key = "{$field['field_name']}[0]['{$column}']";
+            $key = serialize(array('field' => $field['field_name'], 'value' => $column));
+            $options[$key] = $label;
+          }
+        }
+      }
+    }
+    $date_settings_fs = array(
+      '#type' => 'fieldset',
+      '#title' => t('Date Settings Fieldset'),
+      '#title_display' => 'invisible',
+      '#collapsible' => FALSE,
+      '#collapsed' => FALSE,
+      '#states' => array(
+        'visible' => array(
+          ':input[name="course_use"]' => array('checked' => TRUE),
+        ),
+      ),
+    );
+    $date_settings_fs['course_start_date'] = array(
+      '#title' => t('Field to use for enduring-course start date'),
+      '#description' => t('Select the field to use for enduring-course start date.'),
+      '#type' => 'select',
+      '#options' => $options,
+      '#default_value' => variable_get("course_start_date_{$form['#node_type']->type}", 0),
+      '#prefix' => '<h3>' . t('Enduring course dates') . '</h3>',
+    );
+    $date_settings_fs['course_expiration_date'] = array(
+      '#title' => t('Field to use for enduring-course expiration date'),
+      '#description' => t('Select the field to use for enduring-course expiration date.'),
+      '#type' => 'select',
+      '#options' => $options,
+      '#default_value' => variable_get("course_expiration_date_{$form['#node_type']->type}", 0),
+    );
+    // Live course dates.
+    $date_settings_fs['course_live_from_date'] = array(
+      '#title' => t('Field to use for live-course start date'),
+      '#description' => t('Select the field to use for live-course start date.'),
+      '#type' => 'select',
+      '#options' => $options,
+      '#default_value' => variable_get("course_live_from_date_{$form['#node_type']->type}", 0),
+      '#prefix' => '<h3>' . t('Live course dates') . '</h3>',
+    );
+    $date_settings_fs['course_live_to_date'] = array(
+      '#title' => t('Field to use for live-course end date'),
+      '#description' => t('Select the field to use for live-course end date.'),
+      '#type' => 'select',
+      '#options' => $options,
+      '#default_value' => variable_get("course_live_to_date_{$form['#node_type']->type}", 0),
+    );
+    $form['course']['date_settings_fs'] = $date_settings_fs;
+  }
+
+  $form['#entity_builders'][] = 'course_form_node_type_edit_form_builder';
+}
+
+/**
+ * Set third party course setting on form submit.
+ */
+function course_form_node_type_edit_form_builder($entity_type, NodeType $node_type, &$form, FormStateInterface $form_state) {
+  if ($form_state->getValue('course_enabled')) {
+    $node_type->setThirdPartySetting('course', 'enabled', $form_state->getValue('course_enabled'));
+    return;
+  }
+
+  $node_type->unsetThirdPartySetting('course', 'enabled');
+}
+
+/**
+ * Generic Course IFrame function.
+ *
+ * @param string $url
+ *   An iframe HTML element src attribute.
+ * @param string $height
+ *   A string representing an iframe height.
+ * @param string $class
+ *   A HTML class attribute for the iframe.
+ */
+function course_iframe($url = NULL, $height = '600px', $class = NULL) {
+  $style = 'border:none; margin:0; width:100%; height:' . $height . ';';
+  $iframe = '<iframe id="course-viewer" src="' . $url . '" style="' . $style . '" class="' . $class . '" scrolling="no" frameborder="0" onload="resizeFrame(this);"></iframe>';
+
+  // Add JS to resize parent frame. This assumes additional JS on the targeted iframe content.
+  drupal_add_js(drupal_get_path('module', 'course') . '/js/resizeframe.js');
+
+  return $iframe;
+}
+
+/**
+ * Get a course object by its unique identifier (sessioned course object).
+ *
+ * @param string $uniqid
+ *   Unique identifier.
+ *
+ * @return CourseObject|FALSE
+ */
+function _course_get_course_object_by_uniqid($uniqid) {
+  if (!empty($_SESSION['course'])) {
+    foreach ($_SESSION['course'] as $cid => $session) {
+      if (isset($session['editing']) && is_array($session['editing'])) {
+        foreach ($session['editing'] as $coid => $object) {
+          if ($coid == $uniqid) {
+            return CourseObject::create($object);
+          }
+        }
+      }
+    }
+  }
+
+  return FALSE;
+}
+
+/**
+ * Get a course object by its identifier.
+ *
+ * @todo move to Storage?
+ *
+ * @param int $coid
+ *   The numeric or temporary ID of the course object.
+ *
+ * @return CourseObject|FALSE
+ *   A loaded CourseObject or FALSE if no object found.
+ */
+function course_get_course_object_by_id($coid) {
+  if (!is_numeric($coid)) {
+    return _course_get_course_object_by_uniqid($coid);
+  }
+
+  $courseObject = CourseObject::load($coid);
+  if ($courseObject) {
+    return $courseObject;
+  }
+
+  return FALSE;
+}
+
+/**
+ * Find a course object by module, type, instance, and optionally course.
+ *
+ * If course is provided and an instance exists in two courses, the object
+ * returned will be the object in the requested course. If a course is not
+ * provided, the object returned will be in the context of the current course.
+ *
+ * @param mixed $module
+ *   The module name of this course object, or an array resembling a row in the
+ *   {course_object} table.
+ * @param string $object_type
+ *   The object type belonging to the module.
+ * @param string $instance
+ *   The course object instance ID, FROM {course_object}.instance.
+ * @param Course $course
+ *   The Course to pass to the CourseObject instantiation.
+ *
+ * @todo move to Storage?
+ *
+ * @return CourseObject
+ */
+function course_get_course_object(string $object_type, $instance, Course $course = NULL) {
+  $search = ['object_type' => $object_type, 'instance' => $instance];
+  if (isset($course)) {
+    $search['cid'] = $course->id();
+  }
+  $entities = Drupal::entityTypeManager()->getStorage('course_object')->loadByProperties($search);
+  if ($entities) {
+    return reset($entities);
+  }
+
+  return NULL;
+}
+
+/**
+ * Get the Course that a Node references.
+ *
+ * @param Node $node
+ *   The node object.
+ * @param stdClass $account
+ *   The user with which to instantiate course objects and fulfillment.
+ *
+ * @return Course|boolean
+ *   The Course entity, or FALSE if provided node was not a Course.
+ */
+function course_get_course(Node $node) {
+  if (course_node_is_course($node)) {
+    if ($course = $node->field_course->entity) {
+      return $course;
+    }
+  }
+
+  return FALSE;
+}
+
+/**
+ * Find the Entity that a Course is attached to.
+ *
+ * @param Course $course
+ * @param string $entity_type
+ *
+ * @return Node
+ */
+function course_get_attached(Course $course, $entity_type = 'node') {
+  $nids = Drupal::entityQuery($entity_type)
+    ->condition('field_course', $course->id())
+    ->execute();
+  if ($nids) {
+    return Node::load(reset($nids));
+  }
+}
+
+/**
+ * Check if a Node references a Course.
+ *
+ * @param Node $node
+ *   A node.
+ *
+ * @return bool
+ */
+function course_node_is_course(Node $node) {
+  $type = $node->getType();
+  $node_type = NodeType::load($type);
+  return $node_type->getThirdPartySetting('course', 'enabled');
+}
+
+/**
+ * Implements hook_views_plugins().
+ */
+function course_views_plugins() {
+  return array(
+    'argument validator' => array(
+      'course' => array(
+        'title' => t('Course'),
+        'handler' => 'views_plugin_argument_validate_course',
+        'path' => drupal_get_path('module', 'course') . '/views/plugins',
+      ),
+    ),
+  );
+}
+
+/**
+ * Implements hook_views_api().
+ */
+function course_views_api() {
+  return array(
+    'api' => 3,
+    'path' => drupal_get_path('module', 'course') . '/views',
+  );
+}
+
+/**
+ * Implements hook_entity_extra_field_info().
+ */
+function course_entity_extra_field_info() {
+  $extra = array();
+
+  $course_types = CourseType::loadMultiple();
+  foreach ($course_types as $bundle => $course_type) {
+    $extra['course'][$bundle]['display']['course'] = array(
+      'label' => t('Take course link'),
+      'weight' => 0,
+    );
+    $extra['course'][$bundle]['display']['course_messages'] = array(
+      'label' => t('Course messages'),
+      'weight' => 0,
+    );
+  }
+
+  $extra['course_object']['course_object']['display']['course_outline_image'] = array(
+    'label' => t('Status image'),
+    'weight' => 0,
+  );
+  $extra['course_object']['course_object']['display']['course_outline_link'] = array(
+    'label' => t('Link to the course object'),
+    'weight' => 1,
+  );
+  $extra['course_object']['course_object']['display']['course_outline_status'] = array(
+    'label' => t('Status text'),
+    'weight' => 2,
+  );
+
+  return $extra;
+}
+
+/**
+ * Implements hook_preprocess_page().
+ */
+function course_preprocess_page(&$variables) {
+  // @todo broken
+  return;
+  if (arg(2) == 'take') {
+    $regions = variable_get('course_disable_regions', array());
+    foreach ($regions as $key => $region) {
+      if ($region) {
+        unset($variables[$region]);
+      }
+    }
+  }
+
+  if ($course = course_get_context()) {
+    // Back/next buttons?
+    //$variables['content'] .= 'sdfsdfsd';
+  }
+}
+
+/**
+ * Implements hook_token_info().
+ */
+function course_token_info() {
+  $info = array();
+
+  module_load_install('course');
+  $schema = course_schema();
+
+  // Typess
+  $info['types']['course'] = array(
+    'name' => t('Course'),
+    'description' => t('Course'),
+    'needs-data' => 'node',
+  );
+
+  $info['types']['course-report'] = array(
+    'name' => t('Course report'),
+    'description' => t('Course report entry'),
+  );
+
+  // Tokens
+  foreach ($schema['course_node']['fields'] as $key => $value) {
+    $info['tokens']['course'][$key] = array(
+      'name' => $value['description'],
+      'description' => $value['description'],
+    );
+  }
+
+  $info['tokens']['node']['course'] = array(
+    'name' => t('Course'),
+    'description' => t('The course of the node.'),
+    'type' => 'course',
+  );
+
+  return $info;
+}
+
+/**
+ * Implements hook_tokens().
+ */
+function course_tokens($type, $tokens, array $data = array(), array $options = array()) {
+  $replacements = array();
+
+
+  if ($type == 'node' && !empty($data['node']) && course_node_is_course($data['node'])) {
+    $course_tokens = token_find_with_prefix($tokens, 'course');
+    $node = $data['node'];
+
+    foreach ($course_tokens as $name => $original) {
+      $replacements[$course_tokens[$name]] = $node->course[$name];
+    }
+  }
+
+  /** @todo: replace with how course_enrollment does it, but tokens would change due to underscore/dash usage */
+  if ($type == 'course-report' && !empty($data['node']) && course_node_is_course($data['node']) && !empty($data['user'])) {
+    // Node and user context, we can lookup the user's records.
+    if ($report = course_enrollment_load($data['node'], $data['user'])) {
+      $report->data = empty($report->data) ? NULL : unserialize($report->data);
+      foreach ($tokens as $name => $original) {
+        // Handle date formats
+        if ((strpos($name, 'date_completed') === 0 || strpos($name, 'updated') === 0) && strpos($name, ':') !== FALSE) {
+          $name_parsed = explode(':', $name, 3);
+          $replacements[$tokens[$name]] = format_date($report->{$name_parsed[0]}, $name_parsed[1], $name_parsed[1] == 'custom' && count($name_parsed) == 3 ? $name_parsed[2] : '');
+        }
+        else {
+          if (isset($report->$name)) {
+            $replacements[$tokens[$name]] = $report->$name;
+          }
+        }
+      }
+    }
+  }
+
+  if ($type == 'course_enrollment' && !isset($data['course_enrollment']) && isset($data['node'], $data['user']) && $course_enrollment = course_enrollment_load($data['node'], $data['user'])) {
+    $data['course_enrollment'] = $course_enrollment;
+    // Load enrollment from a passed node/user.
+    return entity_token_tokens('course_enrollment', $tokens, $data, $options);
+  }
+
+  return $replacements;
+}
+
+/**
+ * Implements hook_init().
+ *
+ * Detect and set course context. Adds javascript for course objects that
+ * require polling. Hack for #1902104.
+ */
+function course_init() {
+  if (class_exists('Course') && $courseNode) {
+    // Check that Course exists for a special use case where Autoload hasn't yet
+    // cached the Course class.
+
+    $course = course_get_course($courseNode);
+    if ($course && $active = $course->getActive()) {
+      if ($active->hasPolling()) {
+        drupal_add_js(
+          array(
+            'courseAjaxNavPath' => url('node/' . $courseNode->nid . '/object/' . $course->getActive()->getId() . '/ajax/nav'),
+          ), array('type' => 'setting'
+          , 'scope' => JS_DEFAULT));
+      }
+    }
+  }
+}
+
+/**
+ * Course content handler callback.
+ */
+function course_context() {
+  $route_match = Drupal::routeMatch();
+  if (in_array($route_match->getRouteName(), ['course.take', 'course.object'])) {
+    $course = $route_match->getParameter('course');
+    course_set_context($course);
+  }
+}
+
+/**
+ * Implements hook_course_access().
+ *
+ * Block enrollments when a course has either not yet started or is expired.
+ */
+function course_course_access(Course $entity, $operation, AccountInterface $account) {
+  $request_time = Drupal::time()->getRequestTime();
+  $enrollment = $entity->getEnrollment($account);
+
+  if (!$entity->get('course_date')->isEmpty() && in_array($operation, ['take', 'enroll'])) {
+    $date = $entity->get('course_date')->getValue();
+    $course_open = new DrupalDateTime($date[0]['value'], 'UTC');
+    $course_close = new DrupalDateTime($date[0]['end_value'], 'UTC');
+    $now = DrupalDateTime::createFromTimestamp($request_time);
+    $course_not_open = $course_open->diff($now)->invert;
+    $course_closed = !$course_close->diff($now)->invert;
+
+    $formatter = Drupal::service('date.formatter');
+
+    // Both enroll and take course blockers.
+    if ($date[0]['value'] && $course_not_open) {
+      $message = t('This course opens on %date.', ['%date' => $formatter->format($course_open->getTimestamp())]);
+      return ['course_notopen' => AccessResult::forbidden((string) $message)];
+    }
+
+    if ($date[0]['end_value'] && $course_closed) {
+      $message = t('This course closed on %date.', ['%date' => $formatter->format($course_close->getTimestamp())]);
+      return ['course_closed' => AccessResult::forbidden((string) $message)];
+    }
+  }
+
+  if ($operation == 'enroll') {
+    if (!$entity->access('view', $account)) {
+      return array('course_denied' => AccessResult::forbidden('You do not have permission to enroll into this course'));
+    }
+
+    if (!empty($entity->course['live_from_date']) && REQUEST_TIME > $entity->course['live_from_date']) {
+      return array('course_live_started' => array(
+          'success' => FALSE,
+          'message' => t('This live activity started on %date and is no longer available for enrollments.', array(
+            '%date' => format_date($entity->course['live_from_date'], 'long'),
+          )),
+      ));
+    }
+
+    if ($account->isAnonymous()) {
+      $options = array('query' => drupal_get_destination());
+      return array('course_noanon' => array(
+          'success' => FALSE,
+          'header' => '',
+          'message' => t('Please !login or !register to take this course.', array(
+            '!login' => l(t('login'), 'user/login', $options),
+            '!register' => l(t('register'), 'user/register', $options),
+          )),
+          'weight' => 300,
+      ));
+    }
+
+    if (!$entity->access('view', $account)) {
+      return ['course_noperm' => AccessResult::forbidden('You are not allowed to take courses.')];
+    }
+  }
+
+  if ($operation == 'take') {
+    if (!$entity->access('view', $account)) {
+      return ['course_node_access' => AccessResult::forbidden('You do not have permission to take this course.')];
+    }
+
+
+    if ($enrollment) {
+      // Check if there are any required, unfilled fields on the enrollment.
+      $instances = $enrollment->getFieldDefinitions();
+      foreach ($instances as $field_name => $instance) {
+        if ($instance instanceof FieldConfig) {
+          if ($instance->get('required') && $enrollment->get($field_name)->isEmpty()) {
+            $button = [
+              '#theme' => 'course_take_course_button',
+              '#node' => $entity,
+            ];
+            $entity->content['course']['#markup'] = Drupal::service('renderer')->render($button);
+            return [
+              'course_enrollment' => AccessResult::forbidden('You must fill out required enrollment fields. Click here to whatever'),
+            ];
+          }
+        }
+      }
+
+      if ($enrollment->get('enroll_end')->getString() > 0 && $request_time > $enrollment->get('enroll_end')->getString()) {
+        return ['course_enrollment_expired' => AccessResult::forbidden('Sorry, your enrollment has expired for this course.')];
+      }
+    }
+    else {
+      return ['course_not_enrolled' => AccessResult::forbidden('Sorry, you must first enroll in this course.')];
+    }
+  }
+}
+
+/**
+ * Implements hook_user_delete().
+ *
+ * Clean up course reports and fulfillments for a deleted user.
+ */
+function course_user_delete($account) {
+  $result = Drupal::database()->query("SELECT * FROM {course_enrollment} WHERE uid = :uid", array(':uid' => $account->uid));
+  while ($enrollment = $result->fetch()) {
+    $node = Node::load($enrollment->nid);
+    course_unenroll($node, $account);
+  }
+}
+
+/**
+ * Implements hook_theme().
+ *
+ * @todo none of this works in D8
+ */
+function course_theme() {
+  return array(
+    'course_report' => array(
+      'file' => 'includes/course.reports.inc',
+      'variables' => array(
+        'nav' => NULL,
+        'header' => NULL,
+        'body' => NULL,
+      ),
+    ),
+    'course_outline' => array(
+      'file' => 'includes/course.theme.inc',
+      'variables' => array(
+        'node' => NULL,
+        'items' => NULL,
+      ),
+    ),
+    'course_take_course_button' => array(
+      'variables' => array(
+        'course' => NULL,
+        'title' => NULL,
+      ),
+    ),
+  );
+}
+
+/**
+ * Gets the course context.
+ *
+ * @return Course
+ *   The Course context, or NULL.
+ */
+function course_get_context() {
+  return course_set_context();
+}
+
+/**
+ * Sets a course context.
+ *
+ * @return Course
+ */
+function course_set_context(Course $course = NULL, $clear = FALSE) {
+  $stored_course = &drupal_static(__FUNCTION__);
+
+  if ($clear) {
+    $stored_course = NULL;
+  }
+
+  if (!empty($course)) {
+    $stored_course = $course;
+  }
+
+  return (!empty($stored_course)) ? $stored_course : NULL;
+}
+
+/**
+ * Get the course node automatically, or from optional query parameters.
+ *
+ * @param string $module
+ *   The implementing course object provider module name.
+ * @param string $object_type
+ *   The course object key as defined by hook_course_handlers().
+ * @param string $instance
+ *   A key used internally by the implementing course object provider module,
+ *   to identify an instance of *something* used by this course object type.
+ * @param bool $no_set
+ *   Do not set the context (active course), just return it.
+ * @param bool $flush
+ *   Flush the static cache. By default, course_determine_context will stop
+ *   processing once a course is found, and continue to return it.
+ *
+ * @return mixed
+ *   A course node or NULL if course context not found.
+ */
+function course_determine_context($object_type = NULL, $instance = NULL, $no_set = FALSE) {
+  $lookup = &drupal_static('course_determine_context', array());
+  if (isset($lookup["$object_type:$instance"])) {
+    return $lookup["$object_type:$instance"];
+  }
+
+  $context = NULL;
+
+  // Determine the course node based on passed query parameters.
+  $result = Drupal::database()->query("SELECT cid FROM {course_object} WHERE instance = :instance AND object_type = :object_type", array(':instance' => $instance, ':object_type' => $object_type));
+  $cids = array();
+  while ($course_outline = $result->fetch()) {
+    $cids[] = $course_outline->cid;
+  }
+
+  if (count($cids) > 1) {
+    if (!empty($_SESSION['course']['active']) && in_array($_SESSION['course']['active'], $cids)) {
+      // The active course in the session is one of the courses this object
+      // belongs to.
+      $context = Course::load($_SESSION['course']['active']);
+    }
+    else {
+      // No active course, or no match. We have to guess since we're accessing
+      // this course material outside of the course.
+      $context = Course::load($cids[0]);
+    }
+  }
+  elseif ($cids) {
+    // We don't have an active session (or, the course in the active session
+    // didn't contain this course object). So we just guess the first one.
+    $context = Course::load($cids[0]);
+  }
+
+  if ($no_set) {
+    // Callee just wants context.
+    $lookup["$object_type:$instance"] = $context;
+    return $context;
+  }
+  elseif ($context) {
+    // Set the active course and static cache it.
+    $_SESSION['course']['active'] = $context->cid;
+    $lookup["$object_type:$instance"] = $context;
+    return $context;
+  }
+}
+
+/**
+ * Helper function for autocompletion of node titles.
+ */
+function course_object_autocomplete_node($types, $string) {
+  $matches = array();
+  $values = explode(',', $types);
+  $query = Drupal::database()->select('node', 'n');
+  $query->condition('n.type', $values, 'in')
+    ->condition(
+      db_or()
+      ->condition('n.title', "%$string%", 'like')
+      ->condition('n.nid', $string)
+    )
+    ->fields('n', array('nid', 'title'))
+    ->range(0, 10);
+  $result = $query->execute();
+  while ($node = $result->fetch()) {
+    $matches[$node->title . " [nid: $node->id()]"] = '<span class="autocomplete_title">' . check_plain($node->title) . '</span>';
+  }
+
+  drupal_json_output($matches);
+}
+
+/**
+ * Implements hook_cron().
+ *
+ * Revoke access to inaccessible objects.
+ */
+function course_cron() {
+  $handlers = course_get_handlers('object');
+  $modules = array();
+
+  foreach ($handlers as $module => $object) {
+    foreach ($object as $key => $info) {
+      if (is_subclass_of($info['class'], 'CourseObjectNode')) {
+        // This module provides an object of type CourseObjectNode.
+        $modules[] = $module;
+      }
+    }
+  }
+
+  if ($modules) {
+    // Get a list of fulfillments for CourseObjectNodes.
+    $sql = "SELECT * FROM {course_object}
+    INNER JOIN {course_object_fulfillment} USING (coid)
+    WHERE module IN (:modules)";
+    $result = Drupal::database()->query($sql, array(':modules' => $modules));
+    while ($row = $result->fetch()) {
+      $extra = unserialize($row->data);
+      if (!empty($extra['private'])) {
+        // This fulfillment used private content.
+        $user = User::load($row->uid);
+        $courseObject = course_get_course_object_by_id($row->coid);
+        if (!$courseObject->access('take', $user)) {
+          // User has no access to take this course object. Revoke access.
+          $courseObject->getFulfillment($user)->revoke();
+        }
+      }
+    }
+  }
+}
+
+/**
+ * Implements hook_course_admin_paths().
+ *
+ * Expose the course object configuration as an administrative path.
+ *
+ * @todo https://www.drupal.org/node/2224207
+ */
+function course_admin_paths() {
+  return array(
+    'node/*/object/*/options' => TRUE,
+  );
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function course_form_field_config_edit_form_alter(&$form, FormStateInterface $form_state) {
+  $field = $form_state->getFormObject()->getEntity();
+  if ($field->getTargetEntityTypeId() != 'course_enrollment') {
+    return;
+  }
+
+  $form['third_party_settings']['course']['show_field'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Show this field on enrollment.'),
+    '#default_value' => $field->getThirdPartySetting('course', 'show_field', TRUE),
+    '#description' => t('If checked, this field will be presented when starting a course.'),
+  );
+}
+
+/**
+ * Implements hook_entity_field_access().
+ *
+ * Don't show the user fields that weren't marked as enrollment fields.
+ */
+function course_entity_field_access($operation, FieldDefinitionInterface $field_definition, AccountInterface $account, FieldItemListInterface $items = NULL) {
+  if ($field_definition->getTargetEntityTypeId() == 'course_enrollment') {
+    if (is_a($field_definition, FieldConfig::class)) {
+      /* @var $field_definition FieldConfig */
+      if (!$field_definition->getThirdPartySetting('course', 'show_field')) {
+        return AccessResult::forbidden('enrollment_user_field');
+      }
+    }
+  }
+
+  return AccessResult::neutral();
+}
+
+/**
+ * Implements hook_course_credit_map_options().
+ */
+function course_course_credit_map_options() {
+  $ret = array();
+  $instances = field_info_instances('course_enrollment', 'course_enrollment');
+  foreach ($instances as $field_name => $instance_info) {
+    $field_info = field_info_field($field_name);
+    if ($options = list_allowed_values($field_info)) {
+      $ret['course_enrollment']['mappers'][$field_name]['title'] = $instance_info['label'];
+      $ret['course_enrollment']['mappers'][$field_name]['options'] = $options;
+    }
+  }
+  return $ret;
+}
+
+/**
+ * Implements hook_course_credit_map().
+ *
+ * Figure out if the user's enrollment fields make them eligible for credit.
+ */
+function course_course_credit_map(Course $course, AccountInterface $account, $mappings) {
+  if ($enrollment = $course->getEnrollment($account)) {
+    if (!empty($mappings['course_enrollment'])) {
+      foreach ((array) $mappings['course_enrollment'] as $field => $values) {
+        if (!empty($enrollment->{$field})) {
+          foreach ($enrollment->{$field}[LANGUAGE_NONE] as $item) {
+            if (in_array($item['value'], $values)) {
+              return TRUE;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+/**
+ * Access callback for course objects menu tab.
+ */
+function _course_reports_access($node) {
+  return $node->access('update') || Drupal::currentUser()->hasPermission('access all course reports');
+}
+
+/**
+ * Can the user access the course administration pages?
+ */
+function course_admin_access() {
+  return Drupal::currentUser()->hasPermission('administer course') || Drupal::currentUser()->hasPermission('access course administration area');
+}
+
+/**
+ * Implements hook_page_attachments().
+ */
+function course_page_attachments(&$page) {
+  $page['#attached']['library'][] = 'course/styles';
+}
+
+function course_entity_bundle_info() {
+  $bundles['course_object_type']['whatever']['label'] = 'sdfsdf';
+  return $bundles;
+}

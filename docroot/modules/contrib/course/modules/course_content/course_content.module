@@ -1,0 +1,56 @@
+<?php
+
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\node\Entity\NodeType;
+use Drupal\node\NodeInterface;
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function course_content_form_node_type_form_alter(&$form, FormStateInterface $form_state) {
+  $node = $form_state->getFormObject()->getEntity();
+
+  // Alter the node type's configuration form to add our setting.
+  $form['course']['course_content_enabled'] = array(
+    '#title' => t('Use as course content'),
+    '#type' => 'checkbox',
+    '#default_value' => $node->getThirdPartySetting('course_content', 'use'),
+    '#description' => t('This content type will be used as %course content.', array('%course' => 'Course')),
+  );
+
+  $form['#entity_builders'][] = 'course_content_form_node_type_edit_form_builder';
+}
+
+/**
+ * Set third party course setting on form submit.
+ */
+function course_content_form_node_type_edit_form_builder($entity_type, NodeType $node_type, &$form, FormStateInterface $form_state) {
+  if ($form_state->getValue('course_content_enabled')) {
+    $node_type->setThirdPartySetting('course_content', 'use', $form_state->getValue('course_content_enabled'));
+    return;
+  }
+
+  $node_type->unsetThirdPartySetting('course_content', 'use');
+}
+
+/**
+ * Implements hook_node_access().
+ *
+ * Check node access.
+ */
+function course_content_node_access(NodeInterface $node, $op, $account) {
+  if ($op == 'view') {
+    if (($courseObject = course_get_course_object('content', $node->id())) && $courseObject->getOption('private')) {
+      // This object is inside of a course and the object is private.
+      if ($courseObject->getFulfillment($account)->id()) {
+        // The user can take the object, so grant access. Make sure it is not
+        // cached in case of a revocation.
+        return \Drupal\Core\Access\AccessResult::allowed()->setCacheMaxAge(0);
+      }
+      else {
+        // Deny access, make sure it is not cached.
+        return \Drupal\Core\Access\AccessResult::forbidden()->setCacheMaxAge(0);
+      }
+    }
+  }
+}

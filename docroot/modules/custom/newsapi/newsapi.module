@@ -1,0 +1,48 @@
+<?php
+
+/**
+ * @file
+ * Contains newsapi.module.
+ */
+
+use Drupal\Core\Routing\RouteMatchInterface;
+
+/**
+ * Implements hook_help().
+ */
+function newsapi_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    // Main module help for the newsapi module.
+    case 'help.page.newsapi':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('A small plugin to import news from newsapi.org, Use this plugin to pull latest news and feed from top sources around the glob.') . '</p>';
+      return $output;
+
+    default:
+  }
+}
+
+/**
+ * Implements hook_theme().
+ */
+function newsapi_theme() {
+  return [
+    'newsapi' => [
+      'render element' => 'children',
+    ],
+    'node.news.field_featured_image' => [
+        'template' => 'field--node--field-featured-image--news'
+    ]
+  ];
+}
+
+//function newsapi_preprocess_field(&$variables, $hook) {
+//    
+//    if ($variables['element']['#field_name'] === 'field_featured_image') {
+//        $variables['element'][0]['#context']['value'] = '<img src="'.$variables['element'][0]['#context']['value'].'" />';
+////        kint($variables['element'][0]['#context']['value']);
+//    }
+//    
+//    return $variables;
+//}

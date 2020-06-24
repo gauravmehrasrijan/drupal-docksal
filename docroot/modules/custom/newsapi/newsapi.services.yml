@@ -1,0 +1,7 @@
+services:
+  logger.channel.newsapi:
+    parent: logger.channel_base
+    arguments: ['newsapi']
+  news.service:
+    class: Drupal\newsapi\Services\NewsApiService
+    arguments: ['@http_client', '@database', '@config.manager']

@@ -104,8 +104,6 @@ class CSV extends SourcePluginBase implements ConfigurableInterface {
     if (empty($this->configuration['ids']) || !is_array($this->configuration['ids'])) {
       throw new \InvalidArgumentException('You must declare "ids" as a unique array of fields in your source settings.');
     }
-//	echo $plugin_id . "\n"; 
-//	print_r($this->configuration); exit;
     // IDs must be an array of strings.
     if ($this->configuration['ids'] !== array_unique(array_filter($this->configuration['ids'], 'is_string'))) {
       throw new \InvalidArgumentException('The ids must a flat array with unique string values.');
@@ -261,7 +259,14 @@ class CSV extends SourcePluginBase implements ConfigurableInterface {
    *   The reader.
    */
   protected function createReader() {
-    return Reader::createFromStream(fopen($this->configuration['path'], 'r'));
+    if (!file_exists($this->configuration['path'])) {
+      throw new \RuntimeException(sprintf('File "%s" was not found.', $this->configuration['path']));
+    }
+    $csv = fopen($this->configuration['path'], 'r');
+    if (!$csv) {
+      throw new \RuntimeException(sprintf('File "%s" could not be opened.', $this->configuration['path']));
+    }
+    return Reader::createFromStream($csv);
   }
 
 }

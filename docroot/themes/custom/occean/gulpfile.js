@@ -16,6 +16,3 @@ catch (e) {
   }
 }
 require('emulsify-gulp')(gulp, localConfig);
-
-
-// Add in master, added in develop, aya aya conflict aya

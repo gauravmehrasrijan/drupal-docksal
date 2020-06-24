@@ -1,0 +1,15 @@
+ajax-nav:
+  version: 1.x
+  js:
+    js/nav.js: {}
+  dependencies:
+    - core/jquery
+admin-css:
+  version: 1.x
+  css:
+    theme:
+      css/admin.css: {}
+styles:
+  css:
+    theme:
+      css/course.css: {}

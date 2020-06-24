@@ -1,0 +1,9 @@
+langcode: en
+status: true
+dependencies:
+  enforced:
+    module:
+      - course_certificate
+id: certificate
+label: 'Certificate'
+

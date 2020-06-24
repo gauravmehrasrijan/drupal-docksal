@@ -1,0 +1,12 @@
+name: Course object manual
+type: module
+description: Allows a course admin to add an arbitrary step which must be completed by an administrator before a learner proceeds past it.
+package: Course objects
+core: 8.x
+dependencies:
+ - course
+
+# Information added by Drupal.org packaging script on 2020-04-02
+version: '3.0.0-alpha1'
+project: 'course'
+datestamp: 1585850435

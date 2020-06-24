@@ -1,0 +1,33 @@
+administer course:
+  title: Administer global course configuration
+  description: Allows changing all course configurations.
+  restrict access: TRUE
+
+access all course reports:
+  title: Access all course reports
+  description: Grants access to all course reports across all courses.
+
+access course administration area:
+  title: Access course administration area
+  description: Grants access to the course administration area, with no other permission.
+
+administer course enrollment types:
+  title: Administer course enrollment types
+  description: Manage course enrollment types, fields, and display settings.
+
+administer course enrollments:
+  title: Administer course enrollments
+  description: Allows editing or deleting all course enrollments.
+
+administer course report:
+  title: Administer course reports
+  description: Allows editing or deleting all course reports.
+
+take course:
+  title: Take courses
+  description: Allows taking enrolled courses.
+
+enroll course:
+  title: Enroll courses
+  description: Allows enrolling in available courses.
+  

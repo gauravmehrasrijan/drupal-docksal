@@ -1,0 +1,49 @@
+course.type.*:
+  type: config_entity
+  label: 'Course type'
+  mapping:
+    id:
+      type: string
+      label: 'ID'
+    label:
+      type: label
+      label: 'Label'
+
+course.object.type.*:
+  type: config_entity
+  label: 'Course object type'
+  mapping:
+    id:
+      type: string
+      label: 'ID'
+    label:
+      type: label
+      label: 'Label'
+
+
+# We only have to do this for bundles apparently.
+course.enrollment.type.*:
+  type: config_entity
+  label: 'Enrollment type settings'
+  mapping:
+    id:
+      type: string
+      label: 'ID'
+    label:
+      type: label
+      label: 'Label'
+
+field.field.*.*.*.third_party.course:
+  type: mapping
+  label: 'Show on enrollment'
+  mapping:
+    show_field:
+        type: boolean
+        label: 'Make this field appear on enrollment.'
+
+course.settings.enrollment:
+  type: config_object
+  mapping:
+    default_enrollment_type:
+      type: string
+      label: 'Default enrollment type for courses.'

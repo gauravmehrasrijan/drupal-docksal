@@ -1,0 +1,11 @@
+/**
+ * Admin toolbar icon.
+ */
+.toolbar-icon-course-admin:before {
+  background-image: url(../images/icon.svg);
+}
+
+.toolbar-icon-course-admin.is-active:before {
+  background-image: url(../images/icon-active.svg);
+  fill: red;
+}
