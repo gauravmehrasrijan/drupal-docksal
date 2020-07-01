@@ -4,8 +4,10 @@ status: true
 dependencies:
   config:
     - field.field.node.page.body
+    - field.field.node.page.field_h5p_content
     - node.type.page
   module:
+    - h5p
     - text
     - user
 _core:
@@ -22,6 +24,13 @@ content:
     region: content
     settings: {  }
     third_party_settings: {  }
+  field_h5p_content:
+    weight: 102
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    type: h5p_default
+    region: content
   links:
     weight: 101
     region: content

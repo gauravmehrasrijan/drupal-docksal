@@ -1,0 +1,23 @@
+uuid: 764afa62-c0d4-404e-a5b0-74610b726df1
+langcode: en
+status: true
+dependencies:
+  module:
+    - search
+  theme:
+    - crap
+_core:
+  default_config_hash: Q-4EcGAsu26ICu4ejEz0uE1zv4akpiaOsizxgZfAmEw
+id: crap_search
+theme: crap
+region: header
+weight: -1
+provider: null
+plugin: search_form_block
+settings:
+  id: search_form_block
+  label: Search
+  provider: search
+  label_display: visible
+  page_id: node_search
+visibility: {  }

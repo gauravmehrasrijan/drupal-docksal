@@ -1,0 +1,38 @@
+uuid: 1dc1d278-7cc4-4e4e-bf2d-3e879eb433d1
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.teaser
+    - field.field.node.profiles.field_current_address
+    - field.field.node.profiles.field_event_id
+    - field.field.node.profiles.field_event_phone
+    - field.field.node.profiles.field_fr_contact_name
+    - field.field.node.profiles.field_other_position
+    - field.field.node.profiles.field_page_resource_title
+    - field.field.node.profiles.field_position
+    - field.field.node.profiles.field_salutation
+    - node.type.profiles
+  module:
+    - user
+id: node.profiles.teaser
+targetEntityType: node
+bundle: profiles
+mode: teaser
+content:
+  links:
+    weight: 100
+    settings: {  }
+    third_party_settings: {  }
+    region: content
+hidden:
+  field_current_address: true
+  field_event_id: true
+  field_event_phone: true
+  field_fr_contact_name: true
+  field_other_position: true
+  field_page_resource_title: true
+  field_position: true
+  field_salutation: true
+  langcode: true
+  search_api_excerpt: true

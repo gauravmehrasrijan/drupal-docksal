@@ -1,0 +1,21 @@
+uuid: 46f0013c-5aa0-4d34-b331-abc7369a8eb3
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_position
+    - node.type.profiles
+  module:
+    - options
+id: node.profiles.field_position
+field_name: field_position
+entity_type: node
+bundle: profiles
+label: Position
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: list_string

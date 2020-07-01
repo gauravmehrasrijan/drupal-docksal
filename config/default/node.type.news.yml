@@ -1,0 +1,19 @@
+uuid: 1e712b88-72e1-4ba9-ae1e-fe10ccb152e3
+langcode: en
+status: true
+dependencies:
+  module:
+    - menu_ui
+third_party_settings:
+  menu_ui:
+    available_menus: {  }
+    parent: ''
+_core:
+  default_config_hash: ymTpxZBZAA8xN-84pDOiNjWxaw2qvNcpE3fQeV0D2ek
+name: News
+type: news
+description: 'A new content type to hold news generated from news api'
+help: ''
+new_revision: true
+preview_mode: 1
+display_submitted: true

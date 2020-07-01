@@ -1,0 +1,20 @@
+uuid: 8ff6c63f-b8fa-4503-81b0-5db1f03761ed
+langcode: en
+status: true
+dependencies:
+  module:
+    - menu_ui
+third_party_settings:
+  menu_ui:
+    available_menus:
+      - main-menu
+    parent: 'main-menu:0:'
+_core:
+  default_config_hash: hj1eKwm_c93nZ4WRP-SwBAni-cfMoD5I_dxQgTzS-cw
+name: Course
+type: course
+description: 'A <em>course</em> containing Drupal learning objects.'
+help: ''
+new_revision: true
+preview_mode: 1
+display_submitted: false

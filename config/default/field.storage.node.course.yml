@@ -1,0 +1,22 @@
+uuid: 06c7c952-75d6-4ab6-bd1a-a3659bffa4ba
+langcode: en
+status: true
+dependencies:
+  module:
+    - course
+    - node
+_core:
+  default_config_hash: '-Nb-Rj6wcFTAvIGwQtMSVStnfvvpT8FH7e97uGdEXiQ'
+id: node.course
+field_name: course
+entity_type: node
+type: entity_reference
+settings:
+  target_type: course
+module: core
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

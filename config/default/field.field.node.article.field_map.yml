@@ -1,0 +1,26 @@
+uuid: 1b2f8a85-a9ea-46a4-a2ef-848f1de9f4d6
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_map
+    - node.type.article
+  module:
+    - svg_maps
+id: node.article.field_map
+field_name: field_map
+entity_type: node
+bundle: article
+label: Map
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  svg_maps_plugin: generic
+  min: ''
+  max: ''
+  prefix: ''
+  suffix: ''
+field_type: svg_maps_float

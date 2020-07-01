@@ -1,0 +1,17 @@
+uuid: 4b14f8e5-f450-49af-8926-b73bc54487d9
+langcode: en
+status: true
+dependencies:
+  module:
+    - svg_maps_usa_states
+_core:
+  default_config_hash: YrY07uHWGfiHy-VEaMtIE5WLvR2iYLD4o_LSNm-oyqA
+id: usa_states.colorado
+label: Colorado
+type: usa_states
+maps_path:
+  -
+    code: CO
+    class: 'state stateCO'
+    path: 'm380.2 235.5-36-3.5-79.1-8.6-2.2 22.1-7 50.4-1.9 13.7 34 3.9 37.5 4.4 34.7 3 14.3 0.6z'
+    detailed_path: 'm184.93 82.739-36-3.5-79.1-8.6-2.2 22.1-7 50.4-1.9 13.7 34 3.9 37.5 4.4 34.7 3 14.3 0.6z'

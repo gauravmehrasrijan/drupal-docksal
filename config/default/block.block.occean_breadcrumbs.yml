@@ -1,0 +1,22 @@
+uuid: 934f72c2-46b4-4467-b450-aa7618145786
+langcode: en
+status: true
+dependencies:
+  module:
+    - system
+  theme:
+    - occean
+_core:
+  default_config_hash: oXUb3JZR2WW5VOdw4HrhRicCsq51mCgLfRyvheG68ck
+id: occean_breadcrumbs
+theme: occean
+region: header
+weight: 0
+provider: null
+plugin: system_breadcrumb_block
+settings:
+  id: system_breadcrumb_block
+  label: Breadcrumbs
+  provider: system
+  label_display: '0'
+visibility: {  }

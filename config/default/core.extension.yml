@@ -5,27 +5,44 @@ module:
   big_pipe: 0
   block: 0
   block_content: 0
+  book: 0
   breakpoint: 0
+  ccf_profiles: 0
   ckeditor: 0
   color: 0
   comment: 0
+  components: 0
   config: 0
   contact: 0
+  content_lock: 0
+  content_lock_timeout: 0
   contextual: 0
+  course: 0
+  course_book: 0
+  course_content: 0
+  course_node: 0
+  course_object_manual: 0
   datetime: 0
+  datetime_range: 0
   dblog: 0
   devel: 0
   devel_generate: 0
   dynamic_page_cache: 0
   editor: 0
+  emulsify_twig: 0
+  entity: 0
   facets: 0
   field: 0
   field_ui: 0
   file: 0
   filter: 0
+  h5p: 0
+  h5p_analytics: 0
+  h5peditor: 0
   help: 0
   history: 0
   image: 0
+  inline_entity_form: 0
   kint: 0
   language: 0
   link: 0
@@ -39,6 +56,7 @@ module:
   migrate_plus: 0
   migrate_source_csv: 0
   migrate_tools: 0
+  newsapi: 0
   node: 0
   options: 0
   page_cache: 0
@@ -56,12 +74,15 @@ module:
   serialization: 0
   shortcut: 0
   simple_glossary: 0
+  svg_maps: 0
+  svg_maps_usa_states: 0
   system: 0
   taxonomy: 0
   text: 0
   toolbar: 0
   tour: 0
   user: 0
+  views_bulk_operations: 0
   views_ui: 0
   menu_link_content: 1
   views: 10
@@ -73,6 +94,8 @@ theme:
   seven: 0
   stark: 0
   emulsify: 0
+  occean: 0
+  crap: 0
 profile: standard
 _core:
   default_config_hash: R4IF-ClDHXxblLcG0L7MgsLvfBIMAvi_skumNFQwkDc

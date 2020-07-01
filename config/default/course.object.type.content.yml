@@ -1,0 +1,11 @@
+uuid: 597cf40a-8bfb-44cf-88be-7a80d36bdc5e
+langcode: en
+status: true
+dependencies:
+  enforced:
+    module:
+      - course_content
+_core:
+  default_config_hash: DZbFWSGbCZjhUkozgulG-JJ9C-R3DS-ErvVdegU7Co0
+id: content
+label: Content

@@ -1,0 +1,21 @@
+uuid: eaf16f5e-0391-419e-be09-a051f649ab24
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_salutation
+    - node.type.profiles
+  module:
+    - options
+id: node.profiles.field_salutation
+field_name: field_salutation
+entity_type: node
+bundle: profiles
+label: Salutation
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: list_string

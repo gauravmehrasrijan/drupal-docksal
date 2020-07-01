@@ -1,0 +1,22 @@
+uuid: 7c3b3291-fb97-4c82-996f-c6d192b7be1d
+langcode: en
+status: true
+dependencies:
+  module:
+    - system
+  theme:
+    - crap
+_core:
+  default_config_hash: 9EoWV2Lot6FVSr50t4hoKgiz1LIXYWNG-IIPYsWxBqo
+id: crap_content
+theme: crap
+region: content
+weight: 0
+provider: null
+plugin: system_main_block
+settings:
+  id: system_main_block
+  label: 'Main page content'
+  provider: system
+  label_display: '0'
+visibility: {  }

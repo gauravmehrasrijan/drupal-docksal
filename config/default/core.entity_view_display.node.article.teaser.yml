@@ -7,6 +7,7 @@ dependencies:
     - field.field.node.article.body
     - field.field.node.article.comment
     - field.field.node.article.field_image
+    - field.field.node.article.field_map
     - field.field.node.article.field_tags
     - image.style.medium
     - node.type.article
@@ -52,6 +53,7 @@ content:
 hidden:
   comment: true
   field_image: true
+  field_map: true
   field_tags: true
   langcode: true
   search_api_excerpt: true

@@ -1,0 +1,22 @@
+uuid: 990744cd-7833-4524-9cad-9129b1f8c99a
+langcode: en
+status: true
+dependencies:
+  module:
+    - system
+  theme:
+    - occean
+_core:
+  default_config_hash: KHQIJ7Vfl25lTjzIc7qIvnuistt-Mw2O0kG4jCofmkI
+id: occean_messages
+theme: occean
+region: header
+weight: 0
+provider: null
+plugin: system_messages_block
+settings:
+  id: system_messages_block
+  label: 'Status messages'
+  provider: system
+  label_display: '0'
+visibility: {  }

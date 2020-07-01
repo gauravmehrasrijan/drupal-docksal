@@ -9,6 +9,6 @@ notifications:
   actions:
     semantic_connector_poolparty_license_check: true
 global_notifications: {  }
-global_notification_last_check: 1583406056
+global_notification_last_check: 1593585460
 _core:
   default_config_hash: vS2iwj5lrTK3VVi_txKaIMDsibcZ1vl7oqjifCUthNU

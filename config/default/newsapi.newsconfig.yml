@@ -1,0 +1,4 @@
+newsapi:
+  news_limit: '10'
+_core:
+  default_config_hash: I6O8HEKrbV4uGyNU6Eldwx3wCJ-kpyWxtgA9z5Gsp00

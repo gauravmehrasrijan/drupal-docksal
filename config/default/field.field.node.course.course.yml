@@ -1,0 +1,28 @@
+uuid: 9dd28771-8037-4964-985b-8696fb8428d2
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.course
+    - node.type.course
+_core:
+  default_config_hash: MTmrZ1cpQ_REAY_Td5EV1In4S_3sp747dgBSNtjZexE
+id: node.course.course
+field_name: course
+entity_type: node
+bundle: course
+label: 'Course settngs'
+description: ''
+required: true
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:course'
+  handler_settings:
+    target_bundles: null
+    sort:
+      field: _none
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

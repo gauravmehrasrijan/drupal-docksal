@@ -1,0 +1,18 @@
+uuid: 553e31b6-c60d-426c-afaf-15859485dbc5
+langcode: en
+status: true
+dependencies:
+  module:
+    - menu_ui
+third_party_settings:
+  menu_ui:
+    available_menus:
+      - main
+    parent: 'main:'
+name: profiles
+type: profiles
+description: ''
+help: ''
+new_revision: true
+preview_mode: 1
+display_submitted: true

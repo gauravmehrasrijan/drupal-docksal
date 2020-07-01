@@ -1,0 +1,19 @@
+uuid: 92472168-f18c-4038-abbc-5296fd3c25c3
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+    - svg_maps
+id: node.field_map
+field_name: field_map
+entity_type: node
+type: svg_maps_float
+settings: {  }
+module: svg_maps
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

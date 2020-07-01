@@ -1,0 +1,62 @@
+uuid: 2dd9cbb9-e3b3-43c3-a0e1-742f9ff57ffd
+langcode: en
+status: true
+dependencies:
+  enforced:
+    module:
+      - ccf_profiles
+_core:
+  default_config_hash: zxVGLJaOXosJBfhSamr1vY7cP2dMlTASvNj7Eon3NEs
+id: profiles
+class: null
+field_plugin_method: null
+cck_plugin_method: null
+migration_tags:
+  - 'json profile import'
+migration_group: ccf_profiles
+label: 'csv feed of profiles'
+source:
+  plugin: csv
+  path: modules/custom/ccf_profiles/artifacts/Doctors.csv
+  header_row_count: 1
+  keys:
+    - source_id
+  ids:
+    source_id:
+      type: integer
+  constants:
+    status: 1
+  fields:
+    -
+      name: title
+      label: 'First Name'
+    -
+      name: lastname
+      label: 'Last name'
+    -
+      name: position
+      label: Position
+    -
+      name: jobtitle
+      label: 'Job Title'
+    -
+      name: practice
+      label: Practice
+process:
+  type:
+    plugin: default_value
+    default_value: profiles
+  field_fr_contact_name: title
+  field_page_resource_title: lastname
+  field_position: position
+  field_event_id: jobtitle
+  field_event_phone: practice
+  sticky:
+    plugin: default_value
+    default_value: 0
+  uid:
+    plugin: default_value
+    default_value: 0
+destination:
+  plugin: 'entity:node'
+migration_dependencies: {  }

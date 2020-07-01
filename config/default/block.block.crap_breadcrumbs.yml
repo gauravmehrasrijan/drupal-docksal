@@ -1,0 +1,22 @@
+uuid: da5cff20-6caf-42ec-a76d-67866730999b
+langcode: en
+status: true
+dependencies:
+  module:
+    - system
+  theme:
+    - crap
+_core:
+  default_config_hash: oXUb3JZR2WW5VOdw4HrhRicCsq51mCgLfRyvheG68ck
+id: crap_breadcrumbs
+theme: crap
+region: header
+weight: 0
+provider: null
+plugin: system_breadcrumb_block
+settings:
+  id: system_breadcrumb_block
+  label: Breadcrumbs
+  provider: system
+  label_display: '0'
+visibility: {  }

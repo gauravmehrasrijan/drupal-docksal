@@ -1,0 +1,11 @@
+uuid: 752b8c47-2e25-4a04-851c-de3c9a7fa077
+langcode: en
+status: true
+dependencies:
+  enforced:
+    module:
+      - course_book
+_core:
+  default_config_hash: gVCE17q08d0jL-136-b_x4rdFWuJC-GnKyv94JvJ-hM
+id: book
+label: Book

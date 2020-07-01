@@ -1,0 +1,10 @@
+uuid: ba69aaed-92a7-4c0a-b97b-a6c5bac98da3
+langcode: en
+status: true
+dependencies: {  }
+id: ccf_profiles
+label: ccf_profiles
+description: ''
+source_type: null
+module: null
+shared_configuration: null

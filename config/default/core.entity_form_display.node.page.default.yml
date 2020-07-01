@@ -4,8 +4,10 @@ status: true
 dependencies:
   config:
     - field.field.node.page.body
+    - field.field.node.page.field_h5p_content
     - node.type.page
   module:
+    - h5peditor
     - path
     - text
 _core:
@@ -31,6 +33,12 @@ content:
     region: content
     settings: {  }
     third_party_settings: {  }
+  field_h5p_content:
+    weight: 121
+    settings: {  }
+    third_party_settings: {  }
+    type: h5p_editor
+    region: content
   langcode:
     type: language_select
     weight: 2

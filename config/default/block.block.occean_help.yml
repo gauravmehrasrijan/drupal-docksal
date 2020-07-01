@@ -1,0 +1,22 @@
+uuid: 1d8cd8c0-48d9-4521-8139-f8c1aec906c8
+langcode: en
+status: true
+dependencies:
+  module:
+    - help
+  theme:
+    - occean
+_core:
+  default_config_hash: 8I8iACSa0sKO3k3jlvUG1ge52rfcKX7USJAQYnzuBgg
+id: occean_help
+theme: occean
+region: content
+weight: -30
+provider: null
+plugin: help_block
+settings:
+  id: help_block
+  label: Help
+  provider: help
+  label_display: '0'
+visibility: {  }
