@@ -1,0 +1,8 @@
+uuid: f6c59151-fe80-427a-b39e-3c90788e6d9c
+langcode: en
+status: true
+dependencies: {  }
+name: 'Blog Categories'
+vid: blog_categories
+description: 'A taxonomy to hold category type'
+weight: 0
